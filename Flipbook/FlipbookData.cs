@@ -1,12 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/FlipbookData")]
-public class FlipbookData : ScriptableObject {
+namespace Gruel.Flipbook {
+	[CreateAssetMenu(menuName = "ScriptableObjects/FlipbookData")]
+	public class FlipbookData : ScriptableObject {
 
-	public bool _loop = true;
-	public Material _material;
+		public bool _loop = true;
+		public Material _material;
 	
-	public int _framesPerSecond = 30;
-	public Sprite[] _keyFrames = new Sprite[0];
+		public int _framesPerSecond = 30;
+		public Sprite[] _keyFrames = new Sprite[0];
 
+	}
 }

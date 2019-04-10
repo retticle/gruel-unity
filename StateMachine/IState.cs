@@ -1,11 +1,13 @@
 using System;
 
-public interface IState {
+namespace Gruel.StateMachine {
+	public interface IState {
 
-	string StateName();
+		string StateName();
 	
-	void StateEnter();
-	void StateExit(Action onStateExited);
-	void StateTick();
+		void StateEnter();
+		void StateExit(Action onStateExited);
+		void StateTick();
 
+	}
 }

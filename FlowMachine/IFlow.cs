@@ -1,9 +1,11 @@
 using UnityEngine;
 
-public interface IFlow {
+namespace Gruel.FlowMachine {
+	public interface IFlow {
 
-	string FlowName();
-	bool ShouldRun();
-	Coroutine RunFlow();
+		string FlowName();
+		bool ShouldRun();
+		Coroutine RunFlow();
 
+	}
 }

@@ -1,7 +1,9 @@
-public enum ETextType {
+namespace Gruel.Localization {
+	public enum ETextType {
 
-	Text,
-	TextMeshPro,
-	TextMeshProUgui,
+		Text,
+		TextMeshPro,
+		TextMeshProUgui,
 	
+	}
 }

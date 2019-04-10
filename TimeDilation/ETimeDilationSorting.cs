@@ -1,7 +1,9 @@
-public enum ETimeDilationSorting {
+namespace Gruel.TimeDilation {
+	public enum ETimeDilationSorting {
 	
-	Latest,
-	Slowest,
-	Fastest,
+		Latest,
+		Slowest,
+		Fastest,
 	
+	}
 }
