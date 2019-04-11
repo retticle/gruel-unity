@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Gruel.SaveSystem;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -11,16 +10,6 @@ namespace Gruel.Audio {
 		public void Init() {
 			MusicInit();
 			SFXInit();
-		}
-
-		private void Start() {
-			MusicStart();
-			SFXStart();
-		}
-
-		private void OnDestroy() {
-			MusicOnDestroy();
-			SFXOnDestroy();
 		}
 #endregion Init
 	
@@ -37,26 +26,13 @@ namespace Gruel.Audio {
 
 		private const float _musicFadeDuration = 0.3f;
 		private static Coroutine _stopMusicCor = null;
-	
-		private void MusicInit() {
-			// Listen for setting changes.
-			SaveController._onMusicEnabledChanged += OnMusicEnabledChanged;
 		
+		private void MusicInit() {
 			_musicAudioSource = _audioSourceContainer.AddComponent<AudioSource>();
 			_musicAudioSource.enabled = false;
 		}
 
-		private void MusicStart() {
-			// Initialize musicAudioMixerGroup with the correct settings.
-			OnMusicEnabledChanged(SaveController.MusicEnabled);
-		}
-
-		private void MusicOnDestroy() {
-			// Stop listening for setting changes.
-			SaveController._onMusicEnabledChanged -= OnMusicEnabledChanged;
-		}
-	
-		private void OnMusicEnabledChanged(bool musicEnabled) {
+		public void SetMusicEnabled(bool musicEnabled) {
 			_musicAudioMixerGroup.audioMixer.SetFloat("musicVolume", musicEnabled ? 0.0f : -80.0f);
 		}
 
@@ -122,9 +98,6 @@ namespace Gruel.Audio {
 		private const int _sfxSourcesMax = 16;
 
 		private void SFXInit() {
-			// Listen for setting changes.
-			SaveController._onSFXEnabledChanged += OnSFXEnabledChanged;
-		
 			// Create sfxAudioSources array.
 			_sfxAudioSources = new AudioSource[_sfxSourcesMax];
 			_sfxRoutines = new Coroutine[_sfxSourcesMax];
@@ -139,17 +112,7 @@ namespace Gruel.Audio {
 			}
 		}
 
-		private void SFXStart() {
-			// Initialize sfxAudioMixerGroup with the correct settings.
-			OnSFXEnabledChanged(SaveController.SFXEnabled);
-		}
-
-		private void SFXOnDestroy() {
-			// Stop listening for setting changes.
-			SaveController._onSFXEnabledChanged -= OnSFXEnabledChanged;
-		}
-
-		private void OnSFXEnabledChanged(bool sfxEnabled) {
+		public void SetSFXEnabled(bool sfxEnabled) {
 			_sfxAudioMixerGroup.audioMixer.SetFloat("sfxVolume", sfxEnabled ? 0.0f : -80.0f);
 		}
 
