@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -25,7 +26,7 @@ namespace Gruel.Audio {
 		private static AudioSource _musicAudioSource;
 
 		private const float _musicFadeDuration = 0.3f;
-		private static Coroutine _stopMusicCor = null;
+		private static ManagedCoroutine _stopMusicCor = null;
 		
 		private void MusicInit() {
 			_musicAudioSource = _audioSourceContainer.AddComponent<AudioSource>();
@@ -44,8 +45,9 @@ namespace Gruel.Audio {
 			}
 		
 			// Check if there is a StopMusicCor running.
-			if (_stopMusicCor != null) {
-				RoutineRunner.RoutineRunner.StopRoutine(_stopMusicCor);
+			if (_stopMusicCor != null
+		    && _stopMusicCor._isRunning) {
+				_stopMusicCor.Stop();
 			}
 
 			_musicAudioSource.clip = musicData._audioClip;
@@ -59,11 +61,8 @@ namespace Gruel.Audio {
 		}
 
 		public static void StopMusic() {
-			if (_stopMusicCor != null) {
-				RoutineRunner.RoutineRunner.StopRoutine(_stopMusicCor);
-			}
-
-			_stopMusicCor = RoutineRunner.RoutineRunner.StartRoutine(StopMusicCor());
+			_stopMusicCor?.Stop();
+			_stopMusicCor = CoroutineRunner.StartManagedCoroutine(StopMusicCor());
 		}
 
 		private static IEnumerator StopMusicCor() {
@@ -90,7 +89,7 @@ namespace Gruel.Audio {
 		[SerializeField] private AudioMixerGroup _sfxAudioMixerGroup;
 	
 		private static AudioSource[] _sfxAudioSources;
-		private static Coroutine[] _sfxRoutines;
+		private static ManagedCoroutine[] _sfxRoutines;
 	
 		private static Queue<int> _sfxAudioSourceQueue = new Queue<int>();
 		private static List<int> _sfxAudioSourceActive = new List<int>();
@@ -100,7 +99,7 @@ namespace Gruel.Audio {
 		private void SFXInit() {
 			// Create sfxAudioSources array.
 			_sfxAudioSources = new AudioSource[_sfxSourcesMax];
-			_sfxRoutines = new Coroutine[_sfxSourcesMax];
+			_sfxRoutines = new ManagedCoroutine[_sfxSourcesMax];
 
 			// Instantiate AudioSource components.
 			for (int i = 0, n = _sfxAudioSources.Length; i < n; i++) {
@@ -136,7 +135,7 @@ namespace Gruel.Audio {
 			_sfxAudioSourceActive.Add(audioSourceId);
 
 			// Start PlaySFXCor.
-			_sfxRoutines[audioSourceId] = RoutineRunner.RoutineRunner.StartRoutine(PlaySFXCor(audioSourceId, sfxData, delay));
+			_sfxRoutines[audioSourceId] = CoroutineRunner.StartManagedCoroutine(PlaySFXCor(audioSourceId, sfxData, delay));
 		
 			return audioSourceId;
 		}
@@ -144,9 +143,7 @@ namespace Gruel.Audio {
 		public static void StopSFX(int audioSourceId) {
 			// Stop the routine.
 			var routine = _sfxRoutines[audioSourceId];
-			if (routine != null) {
-				RoutineRunner.RoutineRunner.StopRoutine(routine);
-			}
+			routine?.Stop();
 		
 			// Disable AudioSource.
 			_sfxAudioSources[audioSourceId].enabled = false;

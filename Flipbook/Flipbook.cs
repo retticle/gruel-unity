@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Gruel.CoroutineSystem;
 using Gruel.ObjectPool;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,9 +47,8 @@ namespace Gruel.Flipbook {
 		}
 
 		public void Destroy() {
-			if (gameObject != null) {
-				Destroy(gameObject);
-			}
+			OnDestroy();
+			GameObject.Destroy(gameObject);
 		}
 #endregion IPoolable
 
@@ -63,7 +63,7 @@ namespace Gruel.Flipbook {
 		[SerializeField] private SpriteRenderer _spriteRenderer;
 		[SerializeField] private Image _image;
 
-		private Coroutine _flipbookCor = null;
+		private ManagedCoroutine _flipbookCor = null;
 		public bool _playing { get; private set; }
 	
 		private bool _loop = true;
@@ -120,9 +120,7 @@ namespace Gruel.Flipbook {
 		public void Play(bool play) {
 			if (_flipbookCor != null) {
 				// Stop routine.
-				if (RoutineRunner.RoutineRunner._instance != null) {
-					RoutineRunner.RoutineRunner.StopRoutine(_flipbookCor);
-				}
+				_flipbookCor?.Stop();
 			
 				_playing = false;
 
@@ -148,7 +146,7 @@ namespace Gruel.Flipbook {
 				}
 
 				_playing = true;
-				_flipbookCor = RoutineRunner.RoutineRunner.StartRoutine(FlipbookCor());
+				_flipbookCor = CoroutineRunner.StartManagedCoroutine(FlipbookCor());
 			}
 		}
 

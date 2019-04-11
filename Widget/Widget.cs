@@ -1,4 +1,5 @@
 using System.Collections;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.Widget {
@@ -31,7 +32,7 @@ namespace Gruel.Widget {
 		/// </summary>
 		/// <returns></returns>
 		public virtual Coroutine Init() {
-			return RoutineRunner.RoutineRunner.StartRoutine(InitCor());
+			return CoroutineRunner.StartCoroutine(InitCor());
 		}
 
 		protected virtual IEnumerator InitCor() {

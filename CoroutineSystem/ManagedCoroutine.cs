@@ -1,26 +1,26 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Gruel.RoutineRunner {
-	public class ManagedRoutine {
+namespace Gruel.CoroutineSystem {
+	public class ManagedCoroutine {
 	
 		public bool _isRunning { get; private set; }
 		public Coroutine _rootRoutine { get; private set; }
 		public Coroutine _childRoutine { get; private set; }
 
-		public ManagedRoutine(IEnumerator routine) {
-			_rootRoutine = RoutineRunner.StartRoutine(RootRoutineCor(routine));
+		public ManagedCoroutine(IEnumerator routine) {
+			_rootRoutine = CoroutineRunner.StartCoroutine(RootRoutineCor(routine));
 		}
 
 		public void Stop() {
 			if (_isRunning) {
 				if (_rootRoutine != null) {
-					RoutineRunner.StopRoutine(_rootRoutine);
+					CoroutineRunner.StopCoroutine(_rootRoutine);
 					_rootRoutine = null;
 				}
 
 				if (_childRoutine != null) {
-					RoutineRunner.StopRoutine(_childRoutine);
+					CoroutineRunner.StopCoroutine(_childRoutine);
 					_childRoutine = null;
 				}
 
@@ -30,7 +30,7 @@ namespace Gruel.RoutineRunner {
 
 		private IEnumerator RootRoutineCor(IEnumerator routine) {
 			_isRunning = true;
-			yield return _childRoutine = RoutineRunner.StartRoutine(routine);
+			yield return _childRoutine = CoroutineRunner.StartCoroutine(routine);
 			_isRunning = false;
 		}
 	

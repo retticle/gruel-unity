@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel {
@@ -14,7 +15,7 @@ namespace Gruel {
 		}
 
 		public static Coroutine LoadResource(string[] path, Action onLoadedCallback = null) {
-			return RoutineRunner.RoutineRunner.StartRoutine(LoadResourceCor(path, onLoadedCallback));
+			return CoroutineRunner.StartCoroutine(LoadResourceCor(path, onLoadedCallback));
 		}
 
 		public static void UnloadResource(string resourcePath) {

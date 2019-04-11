@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel {
@@ -9,7 +10,7 @@ namespace Gruel {
 		public static Coroutine LoadResource(string path, Type type = null, Action<UnityEngine.Object> onLoaded = null, Action<float> onProgress = null) {
 			// Debug.Log($"AsyncLoader.LoadResource: path: {path}");
 		
-			return RoutineRunner.RoutineRunner.StartRoutine(AsyncLoaderCor(path, type, onLoaded, onProgress));
+			return CoroutineRunner.StartCoroutine(AsyncLoaderCor(path, type, onLoaded, onProgress));
 		}
 
 		private static IEnumerator AsyncLoaderCor(string path, Type type = null, Action<UnityEngine.Object> onLoaded = null, Action<float> onProgress = null) {

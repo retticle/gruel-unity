@@ -1,3 +1,5 @@
+CURRENT VERSION: 0.1
+
 ----- ----- ----- -----
 gruel-unity 0.1 | ACTIVE DEVELOPMENT
 ----- ----- ----- -----

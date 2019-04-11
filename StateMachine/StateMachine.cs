@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.StateMachine {
@@ -20,7 +21,7 @@ namespace Gruel.StateMachine {
 		private int _stateCurrent = -1;
 		public int State {
 			get { return _stateCurrent; }
-			set { RoutineRunner.RoutineRunner.StartRoutine(SetState(value)); }
+			set { CoroutineRunner.StartCoroutine(SetState(value)); }
 		}
 
 		public void AddState(int stateId, IState state) {

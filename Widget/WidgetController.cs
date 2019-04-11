@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.Widget {
@@ -47,14 +48,14 @@ namespace Gruel.Widget {
 		public static Coroutine AddWidget(string path, Action<Widget> onWidgetAdded = null) {
 			Debug.Log($"WidgetController.AddWidget: path: {path}");
 
-			return RoutineRunner.RoutineRunner.StartRoutine(_instance.AddWidgetCor(path, onWidgetAdded));
+			return CoroutineRunner.StartCoroutine(_instance.AddWidgetCor(path, onWidgetAdded));
 		}
 
 		public static Coroutine AddWidget(UnityEngine.Object loadedObject, Action<Widget> onWidgetAdded = null) {
 			Debug.Log($"WidgetController.AddWidget: loadedObject: {loadedObject}");
 		
 			// _instance.InstantiateWidget(loadedObject, onWidgetAdded);
-			return RoutineRunner.RoutineRunner.StartRoutine(_instance.InstantiateWidgetCor(loadedObject, onWidgetAdded));
+			return CoroutineRunner.StartCoroutine(_instance.InstantiateWidgetCor(loadedObject, onWidgetAdded));
 		}
 
 		public static void RemoveWidget(Widget widget) {
@@ -77,7 +78,7 @@ namespace Gruel.Widget {
 			yield return AsyncLoader.LoadResource(path, onLoaded: onWidgetObjectLoaded);
 		
 			// InstantiateWidget(loadedWidgetObject, onWidgetAdded);
-			yield return RoutineRunner.RoutineRunner.StartRoutine(InstantiateWidgetCor(loadedWidgetObject, onWidgetAdded));
+			yield return CoroutineRunner.StartCoroutine(InstantiateWidgetCor(loadedWidgetObject, onWidgetAdded));
 		}
 
 		private IEnumerator InstantiateWidgetCor(UnityEngine.Object loadedWidget, Action<Widget> onWidgetAdded = null) {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.FlowMachine {
@@ -16,19 +17,25 @@ namespace Gruel.FlowMachine {
 		private string _flowMachineName;
 	
 		private List<IFlow> _flows = new List<IFlow>();
-		private Coroutine _flowCor = null;
+		private ManagedCoroutine _flowCor = null;
 
 		public void AddFlow(IFlow flow) {
 			_flows.Add(flow);
 		}
 
 		public void StartFlow(Action onFlowCompleteCallback = null) {
-			if (_flowCor != null) {
+			if (_flowCor != null
+		    && _flowCor._isRunning) {
 				Debug.LogError($"{_flowMachineName}.FlowMachine.StartFlow: Flow is already running!");
 				return;
 			}
 
-			_flowCor = RoutineRunner.RoutineRunner.StartRoutine(FlowCor(onFlowCompleteCallback));
+			_flowCor = CoroutineRunner.StartManagedCoroutine(FlowCor(onFlowCompleteCallback));
+		}
+
+		public void StopFlow() {
+			_flowCor?.Stop();
+			_flowCor = null;
 		}
 
 		private IEnumerator FlowCor(Action onFlowCompleteCallback) {

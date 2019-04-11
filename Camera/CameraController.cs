@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.Camera {
@@ -76,20 +77,15 @@ namespace Gruel.Camera {
 		[Header("Shake")]
 		[SerializeField] private Transform _shakeTransform;
 	
-		private Coroutine _shakeCor = null;
+		private ManagedCoroutine _shakeCor = null;
 
 		private void ShakeOnDestroy() {
-			if (_shakeCor != null) {
-				RoutineRunner.RoutineRunner.StopRoutine(_shakeCor);
-			}
+			_shakeCor?.Stop();
 		}
 
 		public static void Shake(CameraShakeData _shakeData) {
-			if (_instance._shakeCor != null) {
-				RoutineRunner.RoutineRunner.StopRoutine(_instance._shakeCor);
-			}
-
-			_instance._shakeCor = RoutineRunner.RoutineRunner.StartRoutine(_instance.ShakeCor(_shakeData));
+			_instance._shakeCor?.Stop();
+			_instance._shakeCor = CoroutineRunner.StartManagedCoroutine(_instance.ShakeCor(_shakeData));
 		}
 
 		private IEnumerator ShakeCor(CameraShakeData _shakeData) {

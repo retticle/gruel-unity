@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gruel.CoroutineSystem;
 using UnityEngine;
 
 namespace Gruel.ObjectPool {
@@ -52,7 +53,7 @@ namespace Gruel.ObjectPool {
 		public static Coroutine Add(string path, int amount) {
 			Debug.Log($"ObjectPool.Add: Adding {amount} {path}");
 		
-			return RoutineRunner.RoutineRunner.StartRoutine(_instance.AddCor(path, amount));
+			return CoroutineRunner.StartCoroutine(_instance.AddCor(path, amount));
 		}
 	
 		private IEnumerator AddCor(string path, int amount) {
