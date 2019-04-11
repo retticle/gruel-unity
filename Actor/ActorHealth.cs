@@ -3,7 +3,7 @@ using Gruel.VariableObjects;
 using UnityEngine;
 
 namespace Gruel.Actor {
-	public class ActorHealth : MonoBehaviour, IHealth {
+	public class ActorHealth : MonoBehaviour, IDamageable, IHealable {
 
 #region Init
 		public void Init(int teamId) {
@@ -18,39 +18,31 @@ namespace Gruel.Actor {
 			HealthAwake();
 		}
 #endregion Init
-	
-#region IHealth
+		
+#region Interfaces
 		public int GetTeamId() {
 			return _teamId;
 		}
-
-		public void SetHealth(int health) {
-			// Get the difference from our current health.
-			var delta = -(_healthCurrent - health);
 		
-			AdjustHealth(delta);
-		}
-	
-		public void AddHealth(int delta) {
-			AdjustHealth(delta);
-		}
-	
-		public void RemoveHealth(int delta) {
-			if (_invulnerable == false) {
-				// Make the delta negative so we subtract it from the current health.
-				AdjustHealth(-delta);
-			}
-		}
-
-		public void Kill() {
-			SetHealth(_healthMin);
-		}
-
 		public bool IsInvulnerable() {
 			return _invulnerable;
 		}
-#endregion IHealth
-	
+		
+		public void Damage(int damage) {
+			if (_invulnerable == false) {
+				AdjustHealth(-damage);
+			}
+		}
+		
+		public void Kill() {
+			AdjustHealth(-_healthCurrent.Value);
+		}
+		
+		public void Heal(int healDelta) {
+			AdjustHealth(healDelta);
+		}
+#endregion Interfaces
+		
 #region Health
 		[Header("Health")]
 		[SerializeField] private IntReference _healthCurrent;
@@ -64,7 +56,6 @@ namespace Gruel.Actor {
 
 		public bool _invulnerable = false;
 
-		// private int _healthCurrent;
 		private int _teamId;
 
 		/// <summary>
@@ -93,6 +84,8 @@ namespace Gruel.Actor {
 			_healthStart.Value = healthStart;
 			_healthMin.Value = healthMin;
 			_healthMax.Value = healthMax;
+
+			_healthCurrent.Value = _healthStart;
 		}
 
 		private void HealthAwake() {
@@ -102,6 +95,7 @@ namespace Gruel.Actor {
 
 		private void AdjustHealth(int delta) {
 			// Health won't be adjusted.
+			// Return right away so the callbacks aren't invoked.
 			if (delta == 0) {
 				return;
 			}
@@ -114,18 +108,12 @@ namespace Gruel.Actor {
 		
 			// Call onHealthAdded action.
 			if (delta > 0) {
-				// Health was added.
 				_onHealthAdded?.Invoke(_healthCurrent, delta);
-
-				return;
 			}
 		
 			// Call onHealthRemoved action.
 			if (delta < 0) {
-				// Health was removed.
 				_onHealthRemoved?.Invoke(_healthCurrent, delta);
-
-				return;
 			}
 
 			// Call onHealthEmpty action.
