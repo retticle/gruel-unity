@@ -5,8 +5,8 @@ using Gruel.ObjectPool;
 using UnityEngine;
 using UnityEngine.UI;
 
-// [ExecuteInEditMode]
 namespace Gruel.Flipbook {
+	// [ExecuteInEditMode]
 	public class Flipbook : MonoBehaviour, IPoolable {
 
 #region Init
@@ -57,6 +57,7 @@ namespace Gruel.Flipbook {
 		[SerializeField] private FlipbookData _flipbookData;
 		[SerializeField] private bool _playOnStart = true;
 		public float _delay = 0.0f;
+		public bool _startAtRandomPlaybackPosition = false;
 		[SerializeField] private bool _poolWhenFinished = false;
 
 		[Header("Renderer")]
@@ -155,12 +156,16 @@ namespace Gruel.Flipbook {
 				yield return new WaitForSeconds(_delay);
 			}
 		
-			var playTime = Time.time;
+			var playTime = _startAtRandomPlaybackPosition ? Time.time + -UnityEngine.Random.Range(0.0f, _duration) : Time.time;
+			var timeSinceStart = 0.0f;
+			var playbackTime = 0.0f;
+			var playbackTimeNormal = 0.0f;
+			var frame = 0;
 			while (_playing) {
-				var timeSinceStart = Time.time - playTime;
-				var playbackTime = timeSinceStart % _duration;
-				var playbackTimeNormal = Mathf.InverseLerp(0.0f, _duration, playbackTime);
-				var frame = (int)Mathf.Lerp(0.0f, _numberOfFrames, playbackTimeNormal);
+				timeSinceStart = Time.time - playTime;
+				playbackTime = timeSinceStart % _duration;
+				playbackTimeNormal = Mathf.InverseLerp(0.0f, _duration, playbackTime);
+				frame = (int)Mathf.Lerp(0.0f, _numberOfFrames, playbackTimeNormal);
 			
 				if (_spriteRenderer != null) {
 					_spriteRenderer.sprite = _flipbookData._keyFrames[frame];
