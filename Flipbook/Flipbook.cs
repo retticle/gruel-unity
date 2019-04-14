@@ -86,8 +86,29 @@ namespace Gruel.Flipbook {
 		public Action _onFinishedPlaying;
 	
 		public Color _tint {
-			get { return _spriteRenderer.color; }
-			set { _spriteRenderer.color = value; }
+			get {
+				if (_spriteRenderer != null) {
+					return _spriteRenderer.color;
+				}
+
+				if (_image != null) {
+					return _image.color;
+				}
+
+				throw new System.InvalidOperationException("Flipbook doesn't have a renderer set!");
+			}
+
+			set {
+				if (_spriteRenderer != null) {
+					_spriteRenderer.color = value;
+					return;
+				}
+
+				if (_image != null) {
+					_image.color = value;
+					return;
+				}
+			}
 		}
 
 		private void FlipbookStart() {
