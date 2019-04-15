@@ -9,8 +9,8 @@ namespace Gruel.Widget {
 	
 #region Init
 		public void Init() {
-			UIInit();
 			CoreInit();
+			UIInit();
 		}
 #endregion Init
 

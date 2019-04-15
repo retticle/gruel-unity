@@ -31,13 +31,11 @@ namespace Gruel.Widget {
 		/// Async initialize the widget.
 		/// </summary>
 		/// <returns></returns>
-		public virtual Coroutine Init() {
+		public Coroutine Init() {
 			return CoroutineRunner.StartCoroutine(InitCor());
 		}
 
-		protected virtual IEnumerator InitCor() {
-			yield return null;
-		}
+		protected abstract IEnumerator InitCor();
 
 		/// <summary>
 		/// Destroys the widget.
@@ -49,7 +47,11 @@ namespace Gruel.Widget {
 		/// </summary>
 		/// <param name="active"></param>
 		/// <returns></returns>
-		public abstract Coroutine SetActive(bool active);
+		public Coroutine SetActive(bool active) {
+			return CoroutineRunner.StartCoroutine(SetActiveCor(active));
+		}
+
+		protected abstract IEnumerator SetActiveCor(bool active);
 #endregion Widget
 
 	}
