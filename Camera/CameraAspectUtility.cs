@@ -2,17 +2,10 @@ using UnityEngine;
 
 namespace Gruel.Camera {
 	[ExecuteInEditMode]
-	public class CameraAspectUtility : MonoBehaviour {
+	public class CameraAspectUtility : CameraTrait {
 
-		[Header("CameraAspectUtility")]
-		[SerializeField] private UnityEngine.Camera _camera;
-
-		[SerializeField] private bool _letterbox = true;
-		[SerializeField] private bool _pillarbox = true;
-
-		[SerializeField] private float _minimumAspectRatio = 16.0f / 9.0f;
-
-		private void Start() {
+#region Init
+		protected override void Start() {
 			SetAspectRatio();
 		}
 	
@@ -21,6 +14,16 @@ namespace Gruel.Camera {
 			SetAspectRatio();
 		}
 #endif
+#endregion Init
+		
+#region CameraAspectUtility
+		[Header("CameraAspectUtility")]
+		[SerializeField] private UnityEngine.Camera _camera;
+
+		[SerializeField] private bool _letterbox = true;
+		[SerializeField] private bool _pillarbox = true;
+
+		[SerializeField] private float _minimumAspectRatio = 16.0f / 9.0f;
 
 		private void SetAspectRatio() {
 			// Determine the game window's current aspect ratio.
@@ -62,6 +65,7 @@ namespace Gruel.Camera {
 				_camera.rect = rect;
 			}
 		}
+#endregion CameraAspectUtility
 
 	}
 }
