@@ -52,7 +52,7 @@ namespace Gruel.Actor {
 		}
 
 		protected void EvaluateTimeDilation() {
-			// If there are now affectors in the system reset custom time dilation and exit.
+			// If there are no affectors in the system reset custom time dilation and exit.
 			if (_timeDilationAffectors.Count < 1) {
 				// Debug.Log("TimeDilation.Evaluate: No more affectors in system, setting _customTimeDilation to 1.0f");
 				SetCustomTimeDilation(1.0f);

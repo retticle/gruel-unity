@@ -62,6 +62,14 @@ namespace Gruel {
 				Lerp(a.z, b.z, t)
 			);
 		}
+		
+		public static bool NearlyEquals(float a, float b, float delta) {
+			return Mathf.Abs(a - b) < delta;
+		}
+
+		public static bool NearlyEquals(Vector3 a, Vector3 b, float delta) {
+			return Vector3.Distance(a, b) < delta;
+		}
 	
 	}
 }
