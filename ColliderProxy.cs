@@ -66,12 +66,28 @@ namespace Gruel {
 	
 #region Mouse
 		public Action _onMouseDown;
+		public Action _onMouseUp;
+		public Action _onMouseDrag;
 
 		/// <summary>
 		/// OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
 		/// </summary>
 		private void OnMouseDown() {
 			_onMouseDown?.Invoke();
+		}
+
+		/// <summary>
+		/// OnMouseUp is called when the user has released the mouse button.
+		/// </summary>
+		private void OnMouseUp() {
+			_onMouseUp?.Invoke();
+		}
+
+		/// <summary>
+		/// OnMouseDrag is called when the user has clicked on a GUIElement or Collider and is still holding down the mouse.
+		/// </summary>
+		private void OnMouseDrag() {
+			_onMouseDrag?.Invoke();
 		}
 #endregion Mouse
 
