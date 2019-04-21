@@ -14,8 +14,6 @@ namespace Gruel {
 		}
 
 		private static IEnumerator AsyncLoaderCor(string path, Type type = null, Action<UnityEngine.Object> onLoaded = null, Action<float> onProgress = null) {
-			yield return null;
-		
 			var asyncOperation = Resources.LoadAsync(path, type == null ? typeof(UnityEngine.Object) : type);
 
 			while (asyncOperation.isDone == false) {

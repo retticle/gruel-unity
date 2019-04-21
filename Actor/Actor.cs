@@ -8,12 +8,40 @@ namespace Gruel.Actor {
 	public class Actor : MonoBehaviour, ITimeDilatable {
 	
 #region Init
-		public virtual void Init() {
+		protected void Init() {
+			TraitsInit();
 			TimeDilationInit();
 		}
 #endregion Init
-	
-#region ITimeDilatable
+		
+#region Traits
+		[Header("Traits")]
+		[SerializeField] private Component[] _traitComponents = new Component[0];
+		
+		private List<IActorTrait> _traits = null;
+
+		private void TraitsInit() {
+			_traits = new List<IActorTrait>();
+			
+			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
+				var trait = (IActorTrait)_traitComponents[i];
+				_traits.Add(trait);
+				trait.Init();
+			}
+		}
+
+		public void AddTrait(IActorTrait trait) {
+			_traits.Add(trait);
+			trait.Init();
+		}
+
+		public void RemoveTrait(IActorTrait trait) {
+			_traits.Remove(trait);
+			trait.Remove();
+		}
+#endregion Traits
+		
+#region TimeDilation
 		[Header("TimeDilation")]
 		[SerializeField] protected ETimeDilationSorting _timeDilationSorting = ETimeDilationSorting.Latest;
 	
@@ -84,7 +112,7 @@ namespace Gruel.Actor {
 					throw new ArgumentOutOfRangeException();
 			}
 		}
-#endregion ITimeDilatable
+#endregion TimeDilation
 	
 	}
 }
