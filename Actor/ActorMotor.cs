@@ -20,7 +20,7 @@ public class ActorMotor : MonoBehaviour, IActorTrait {
 #region Physics Settings
 	[Header("Settings")]
 	public bool _calculateGravityAndJumpForce = true;
-	public float _velocityMax = 1.32f;
+	public float _velocityMax = 100.0f;
 	
 	public float _walkSpeed = 1.25f;
 	
@@ -103,7 +103,7 @@ public class ActorMotor : MonoBehaviour, IActorTrait {
 		_simulationResults._velocity = _simulationResults._velocityCarried + _simulationResults._velocityMovement;
 		
 		// Clamp velocity.
-		// _simulationResults._velocity = Vector3.ClampMagnitude(_simulationResults._velocity, VELOCITY_MAX);
+		_simulationResults._velocity = Vector3.ClampMagnitude(_simulationResults._velocity, _velocityMax);
 		
 		// Apply velocity.
 		_cc.Move(_simulationResults._velocity * Time.deltaTime * _actor._customTimeDilation);
