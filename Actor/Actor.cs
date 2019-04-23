@@ -5,55 +5,75 @@ using Gruel.TimeDilation;
 using UnityEngine;
 
 namespace Gruel.Actor {
-	public class Actor : MonoBehaviour, ITimeDilatable {
-	
+	public abstract class Actor : MonoBehaviour, ITimeDilatable {
+		
 #region Init
 		protected void Init() {
 			TraitsInit();
 			TimeDilationInit();
 		}
 #endregion Init
-		
+
 #region Traits
 		[Header("Traits")]
-		[SerializeField] private Component[] _traitComponents = new Component[0];
-		
+		[SerializeField]
+		private Component[] _traitComponents = new Component[0];
+
 		private List<IActorTrait> _traits = null;
 
 		private void TraitsInit() {
 			_traits = new List<IActorTrait>();
-			
+
 			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
 				var trait = (IActorTrait)_traitComponents[i];
 				_traits.Add(trait);
-				trait.Init();
+				trait.Init(this);
 			}
 		}
 
 		public void AddTrait(IActorTrait trait) {
 			_traits.Add(trait);
-			trait.Init();
+			trait.Init(this);
 		}
 
 		public void RemoveTrait(IActorTrait trait) {
 			_traits.Remove(trait);
 			trait.Remove();
 		}
+
+		public T GetTrait<T>() where T : class, IActorTrait {
+			return _traits.OfType<T>().Select(trait => trait).FirstOrDefault();
+		}
+
+		public bool TryGetTrait<T>(out T outTrait) where T : class, IActorTrait {
+			var type = typeof(T);
+			outTrait = null;
+
+			foreach (var trait in _traits) {
+				if (trait.GetType() == type) {
+					outTrait = (T)trait;
+					return true;
+				}
+			}
+
+			return false;
+		}
 #endregion Traits
 		
 #region TimeDilation
 		[Header("TimeDilation")]
-		[SerializeField] protected ETimeDilationSorting _timeDilationSorting = ETimeDilationSorting.Latest;
-	
-		protected Dictionary<UnityEngine.Object, float> _timeDilationAffectors = new Dictionary<UnityEngine.Object,float>();
+		[SerializeField]
+		protected ETimeDilationSorting _timeDilationSorting = ETimeDilationSorting.Latest;
+
+		protected Dictionary<UnityEngine.Object, float> _timeDilationAffectors = new Dictionary<UnityEngine.Object, float>();
 		protected Action<float> _onTimeDilationChanged;
-	
+
 		public float _customTimeDilation { get; private set; }
 
 		private void TimeDilationInit() {
 			_customTimeDilation = 1.0f;
 		}
-	
+
 		public void SetCustomTimeDilation(float timeDilation) {
 			_customTimeDilation = timeDilation;
 			_onTimeDilationChanged?.Invoke(_customTimeDilation);
@@ -64,7 +84,7 @@ namespace Gruel.Actor {
 				Debug.LogError($"Actor.AddTimeDilationAffector: This affector ({obj.name}) has already been added!");
 				return;
 			}
-		
+
 			_timeDilationAffectors.Add(obj, timeDilation);
 			EvaluateTimeDilation();
 		}
@@ -113,6 +133,16 @@ namespace Gruel.Actor {
 			}
 		}
 #endregion TimeDilation
-	
+		
+#region Physics
+		public virtual void SetVelocity(Vector3 velocity) {
+		
+		}
+		
+		public virtual void ApplyForce(Vector3 force) {
+			
+		}
+#endregion Physics
+
 	}
 }

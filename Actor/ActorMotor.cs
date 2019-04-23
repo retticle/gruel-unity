@@ -5,37 +5,40 @@ using UnityEngine;
 public class ActorMotor : MonoBehaviour, IActorTrait {
 	
 #region ActorTrait
-	public void Init() {
-		PhysicsSettingsAwake();
-		SimulationAwake();
+	private Actor _actor;
+	
+	public void Init(Actor actor) {
+		this._actor = actor;
+		
+		PhysicsSettingsInit();
+		SimulationInit();
 	}
 
-	public void Remove() {
-	}
+	public void Remove() {}
 #endregion ActorTrait
 	
-#region Core
-	[Header("Core")]
-	[SerializeField] private Actor _actor;
-#endregion Core
-	
 #region Physics Settings
-	// private const float WALK_SPEED = 0.8f;
-	private const float WALK_SPEED = 1.25f;
+	[Header("Settings")]
+	public bool _calculateGravityAndJumpForce = true;
+	public float _velocityMax = 1.32f;
 	
-	private const float JUMP_HEIGHT_MAX = 0.64f;
-	private const float JUMP_APEX_TIME = 0.35f;
+	public float _walkSpeed = 1.25f;
 	
-	private const float VELOCITY_MAX = 1.32f;
+	public float _jumpHeightMax = 0.64f;
+	public float _jumpApexTime = 0.35f;
+
+	public float _airControlScalar = 1.0f;
+
+	public float _gravity = -9.8f;
+	public float _jumpForce = 1.0f;
 	
-	private float _gravity = 0.0f;
-	private float _jumpForce = 0.0f;
-	
-	private void PhysicsSettingsAwake() {
-		_gravity = -(2.0f * JUMP_HEIGHT_MAX) / Mathf.Pow(JUMP_APEX_TIME, 2.0f);
-		_jumpForce = Mathf.Sqrt(2.0f * Mathf.Abs(_gravity) * JUMP_HEIGHT_MAX);
+	private void PhysicsSettingsInit() {
+		if (_calculateGravityAndJumpForce) {
+			_gravity = -(2.0f * _jumpHeightMax) / Mathf.Pow(_jumpApexTime, 2.0f);
+			_jumpForce = Mathf.Sqrt(2.0f * Mathf.Abs(_gravity) * _jumpHeightMax);
+		}
 		
-		Debug.Log($"PlayerMotor.PhysicsSettingsAwake: gravity: {_gravity} | jumpForce: {_jumpForce}");
+		Debug.Log($"ActorMotor.PhysicsSettingsInit: gravity: {_gravity} | jumpForce: {_jumpForce}");
 	}
 #endregion Physics Settings
 	
@@ -51,16 +54,20 @@ public class ActorMotor : MonoBehaviour, IActorTrait {
 
 	public Action _onLanded;
 	
-	private void SimulationAwake() {
+	private void SimulationInit() {
 		_simulationResults = new PlayerMotor_SimulationResults();
 	}
 
+	public void SetVelocity(Vector3 velocity) {
+		_simulationResults._velocityCarried = velocity;
+	}
+
 	public void AddForce(Vector3 force) {
-		Debug.Log("PlayerMotor.AddForce: " + force);
+		Debug.Log("ActorMotor.AddForce: " + force);
 		_simulationResults._velocityCarried += force;
 	}
 
-	public void Simulate(float horizontal) {
+	public void Simulate(float horizontalInput) {
 		// Cache previous results.
 		var wasGrounded = _simulationResults._isGrounded;
 		
@@ -77,12 +84,13 @@ public class ActorMotor : MonoBehaviour, IActorTrait {
 		}
 		
 		// Set isWalking.
-		if (horizontal != 0.0f) {
+		if (horizontalInput != 0.0f) {
 			_simulationResults._isWalking = true;
 		}
 
 		// Calculate movement velocity contribution.
-		_simulationResults._velocityMovement.x = horizontal * WALK_SPEED;
+		var walkSpeedActual = _simulationResults._isGrounded ? _walkSpeed : _walkSpeed * _airControlScalar;
+		_simulationResults._velocityMovement.x = horizontalInput * walkSpeedActual;
 		
 		// Apply drag to the carried velocity.
 		_simulationResults._velocityCarried.x = Mathf.SmoothDamp(_simulationResults._velocityCarried.x, 0.0f, ref _smoothX, _smoothTime);

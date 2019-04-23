@@ -53,7 +53,7 @@ namespace Gruel.Camera {
 		[SerializeField] private CameraTrait[] _cameraTraits = new CameraTrait[0];
 		
 		public T GetTrait<T>() where T : CameraTrait {
-			return _cameraTraits.OfType<T>().Select(trait => trait as T).FirstOrDefault();
+			return _cameraTraits.OfType<T>().Select(trait => trait).FirstOrDefault();
 		}
 
 		public bool TryGetTrait<T>(out T outTrait) where T : CameraTrait {
