@@ -46,7 +46,7 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 	[Header("Simulation")]
 	[SerializeField] private CharacterController _cc;
 	
-	public PlayerMotor_SimulationResults _simulationResults { get; private set; }
+	public SimulationResults _simulationResults { get; private set; }
 
 	private float _smoothX = 0.0f;
 	private float _smoothY = 0.0f;
@@ -55,7 +55,7 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 	public Action _onLanded;
 	
 	private void SimulationInit() {
-		_simulationResults = new PlayerMotor_SimulationResults();
+		_simulationResults = new SimulationResults();
 	}
 
 	public void SetVelocity(Vector3 velocity) {
@@ -107,6 +107,33 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 		
 		// Apply velocity.
 		_cc.Move(_simulationResults._velocity * Time.deltaTime * _actor._customTimeDilation);
+	}
+	
+	public class SimulationResults {
+
+		public Vector3 _velocityCarried;
+		public Vector3 _velocityMovement;
+		public Vector3 _velocity;
+		public bool _isWalking;
+		public bool _isGrounded;
+		public bool _isJumping;
+
+		public SimulationResults() {
+			_velocityCarried = Vector3.zero;
+			_velocityMovement = Vector3.zero;
+			_velocity = Vector3.zero;
+			_isWalking = false;
+			_isGrounded = false;
+			_isJumping = false;
+		}
+
+		public void Reset() {
+			_velocityMovement = Vector3.zero;
+			// _isWalking = false;
+			// _isGrounded = false;
+			_isJumping = false;
+		}
+	
 	}
 #endregion Simulation
 
