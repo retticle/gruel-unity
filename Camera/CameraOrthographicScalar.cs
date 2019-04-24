@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.Camera {
-	public class CameraOrthographicScaler : CameraTrait {
+	public class CameraOrthographicScalar : CameraTrait {
 
 #region Init
 		protected override void Start() {
