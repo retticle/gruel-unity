@@ -45,8 +45,22 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 #region Simulation
 	[Header("Simulation")]
 	[SerializeField] private CharacterController _cc;
+	[SerializeField] private bool _isKinematic = false;
 	
 	public SimulationResults _simulationResults { get; private set; }
+	
+	public bool IsKinematic {
+		get { return _isKinematic; }
+		set {
+			_isKinematic = value;
+			
+			if (_isKinematic) {
+				_simulationResults._velocityMovement = Vector3.zero;
+				_simulationResults._velocityCarried = Vector3.zero;
+				_simulationResults._velocity = Vector3.zero;
+			}
+		}
+	}
 
 	private float _smoothX = 0.0f;
 	private float _smoothY = 0.0f;
@@ -88,25 +102,27 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 			_simulationResults._isWalking = true;
 		}
 
-		// Calculate movement velocity contribution.
-		var walkSpeedActual = _simulationResults._isGrounded ? _walkSpeed : _walkSpeed * _airControlScalar;
-		_simulationResults._velocityMovement.x = horizontalInput * walkSpeedActual;
+		if (_isKinematic == false) {
+			// Calculate movement velocity contribution.
+			var walkSpeedActual = _simulationResults._isGrounded ? _walkSpeed : _walkSpeed * _airControlScalar;
+			_simulationResults._velocityMovement.x = horizontalInput * walkSpeedActual;
 		
-		// Apply drag to the carried velocity.
-		_simulationResults._velocityCarried.x = Mathf.SmoothDamp(_simulationResults._velocityCarried.x, 0.0f, ref _smoothX, _smoothTime);
-		_simulationResults._velocityCarried.y = Mathf.SmoothDamp(_simulationResults._velocityCarried.y, 0.0f, ref _smoothY, _smoothTime);
+			// Apply drag to the carried velocity.
+			_simulationResults._velocityCarried.x = Mathf.SmoothDamp(_simulationResults._velocityCarried.x, 0.0f, ref _smoothX, _smoothTime);
+			_simulationResults._velocityCarried.y = Mathf.SmoothDamp(_simulationResults._velocityCarried.y, 0.0f, ref _smoothY, _smoothTime);
 		
-		// Gravity.
-		_simulationResults._velocityCarried.y += _gravity * Time.deltaTime * _actor._customTimeDilation;
+			// Gravity.
+			_simulationResults._velocityCarried.y += _gravity * Time.deltaTime * _actor._customTimeDilation;
 		
-		// Calculate final velocity.
-		_simulationResults._velocity = _simulationResults._velocityCarried + _simulationResults._velocityMovement;
+			// Calculate final velocity.
+			_simulationResults._velocity = _simulationResults._velocityCarried + _simulationResults._velocityMovement;
 		
-		// Clamp velocity.
-		_simulationResults._velocity = Vector3.ClampMagnitude(_simulationResults._velocity, _velocityMax);
+			// Clamp velocity.
+			_simulationResults._velocity = Vector3.ClampMagnitude(_simulationResults._velocity, _velocityMax);
 		
-		// Apply velocity.
-		_cc.Move(_simulationResults._velocity * Time.deltaTime * _actor._customTimeDilation);
+			// Apply velocity.
+			_cc.Move(_simulationResults._velocity * Time.deltaTime * _actor._customTimeDilation);	
+		}
 	}
 	
 	public class SimulationResults {

@@ -84,19 +84,19 @@ namespace Gruel.Actor {
 
 		/// <summary>
 		/// Invoked when health is changed.
-		/// healthCurrent, delta
+		/// health, delta
 		/// </summary>
 		public Action<int, int> _onHealthChanged;
 
 		/// <summary>
 		/// Invoked when healed.
-		/// healthCurrent, delta
+		/// health, delta
 		/// </summary>
 		public Action<int, int> _onHealed;
 
 		/// <summary>
 		/// Invoked when damage is taken.
-		/// healthCurrent, delta
+		/// health, delta
 		/// </summary>
 		public Action<int, int> _onDamaged;
 
