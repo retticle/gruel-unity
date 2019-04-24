@@ -26,6 +26,12 @@ namespace Gruel.CoroutineSystem {
 	
 #region RoutineRunner
 		public new static Coroutine StartCoroutine(IEnumerator coroutine) {
+			// Make sure the CoroutineRunner object is still alive.
+			if (_instance == null
+		    || _instance.gameObject == null) {
+				return null;
+			}
+			
 			return ((MonoBehaviour)_instance).StartCoroutine(coroutine);
 		}
 
