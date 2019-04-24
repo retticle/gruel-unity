@@ -2,7 +2,7 @@ using System;
 using Gruel.Actor;
 using UnityEngine;
 
-public class ActorMotor : MonoBehaviour, IActorTrait {
+public class ActorMotor2D : MonoBehaviour, IActorTrait {
 	
 #region ActorTrait
 	private Actor _actor;
