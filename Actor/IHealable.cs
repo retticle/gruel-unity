@@ -2,10 +2,10 @@ namespace Gruel.Actor {
 	public interface IHealable {
 
 		/// <summary>
-		/// Returns the damageable's teamId.
+		/// Returns the healable's teamId.
 		/// </summary>
 		/// <returns></returns>
-		int GetTeamId();
+		int TeamId { get; set; }
 
 		/// <summary>
 		/// Attempts to heal the actor with the amount specified.

@@ -1,8 +1,8 @@
 namespace Gruel.Actor {
 	public interface IActorTrait {
 
-		void Init(Actor actor);
-		void Remove();
+		void InitializeTrait(Actor actor);
+		void RemoveTrait();
 
 	}
 }

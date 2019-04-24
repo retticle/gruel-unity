@@ -7,14 +7,14 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 #region ActorTrait
 	private Actor _actor;
 	
-	public void Init(Actor actor) {
+	public void InitializeTrait(Actor actor) {
 		this._actor = actor;
 		
 		PhysicsSettingsInit();
 		SimulationInit();
 	}
 
-	public void Remove() {}
+	public void RemoveTrait() {}
 #endregion ActorTrait
 	
 #region Physics Settings

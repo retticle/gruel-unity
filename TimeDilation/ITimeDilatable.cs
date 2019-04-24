@@ -4,6 +4,7 @@ namespace Gruel.TimeDilation {
 		void SetCustomTimeDilation(float timeDilation);
 		void AddTimeDilationAffector(UnityEngine.Object obj, float timeDilation);
 		void RemoveTimeDilationAffector(UnityEngine.Object obj);
+		bool ContainsTimeDilationAffector(UnityEngine.Object obj);
 
 	}
 }

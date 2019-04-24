@@ -3,94 +3,121 @@ using Gruel.VariableObjects;
 using UnityEngine;
 
 namespace Gruel.Actor {
-	public class ActorHealth : MonoBehaviour, IDamageable, IHealable {
+	public class ActorHealth : MonoBehaviour, IActorTrait, IDamageable, IHealable {
 
-#region Init
-		public void Init(int teamId) {
-			HealthInit(teamId);
-		}
-	
-		public void Init(int teamId, int healthStart, int healthMin, int healthMax) {
-			HealthInit(teamId, healthStart, healthMin, healthMax);
-		}
-	
-		private void Awake() {
-			HealthAwake();
-		}
-#endregion Init
-		
-#region Interfaces
-		public int GetTeamId() {
-			return _teamId;
+#region IActorTrait
+		public void InitializeTrait(Actor actor) {
+			HealthInit();
 		}
 		
-		public bool IsInvulnerable() {
-			return _invulnerable;
+		public void RemoveTrait() {}
+#endregion IActorTrait
+		
+#region IDamageable / IHealable
+		public int TeamId {
+			get { return _teamId; }
+			set { _teamId = value; }
 		}
 		
+		public bool IsInvulnerable {
+			get { return _isInvulnerable; }
+			set { _isInvulnerable = value; }
+		}
+
 		public void Damage(int damage) {
-			if (_invulnerable == false) {
+			if (_isInvulnerable == false) {
 				AdjustHealth(-damage);
 			}
 		}
 		
 		public void Kill() {
-			AdjustHealth(-_healthCurrent.Value);
+			AdjustHealth(-_health.Value);
 		}
-		
+
 		public void Heal(int healDelta) {
 			AdjustHealth(healDelta);
 		}
-#endregion Interfaces
+#endregion IDamageable / IHealable
 		
-#region Health
-		[Header("Health")]
-		[SerializeField] private IntReference _healthCurrent;
+#region ActorHealth
+		[Header("Health Settings")]
+		[SerializeField] private IntReference _health;
 		[SerializeField] private IntReference _healthStart;
-		[SerializeField] private IntReference _healthMax;
 		[SerializeField] private IntReference _healthMin;
-	
-		public int HealthMax { get { return _healthMax; } }
-		public int HealthMin { get { return _healthMin; } }
-		public int HealthStart { get { return _healthStart; } }
-
-		public bool _invulnerable = false;
-
-		private int _teamId;
+		[SerializeField] private IntReference _healthMax;
+		
+		[SerializeField] private bool _isInvulnerable = false;
+		[SerializeField] private int _teamId;
 
 		/// <summary>
+		/// The current health.
+		/// Setting this directly will not invoke actions.
+		/// </summary>
+		public int Health {
+			get { return _health; }
+			set { _health.Value = value; }
+		}
+		
+		/// <summary>
+		/// Health will start at this value when the trait is initialized.
+		/// </summary>
+		public int HealthStart {
+			get { return _healthStart; }
+			set { _healthStart.Value = value; }
+		}
+		
+		/// <summary>
+		/// Health will not be able to go below this value.
+		/// </summary>
+		public int HealthMin {
+			get { return _healthMin; }
+			set { _healthMin.Value = value; }
+		}
+	
+		/// <summary>
+		/// Health will not be able to go above this value.
+		/// </summary>
+		public int HealthMax {
+			get { return _healthMax; }
+			set { _healthMax.Value = value; }
+		}
+
+		/// <summary>
+		/// Invoked when health is changed.
 		/// healthCurrent, delta
 		/// </summary>
 		public Action<int, int> _onHealthChanged;
 
 		/// <summary>
+		/// Invoked when healed.
 		/// healthCurrent, delta
 		/// </summary>
-		public Action<int, int> _onHealthAdded;
+		public Action<int, int> _onHealed;
 
 		/// <summary>
+		/// Invoked when damage is taken.
 		/// healthCurrent, delta
 		/// </summary>
-		public Action<int, int> _onHealthRemoved;
+		public Action<int, int> _onDamaged;
 
+		/// <summary>
+		/// Invoked when health reaches the minimum value.
+		/// </summary>
 		public Action _onHealthEmpty;
 
-		private void HealthInit(int teamId) {
-			_teamId = teamId;
+		private void HealthInit() {
+			_health.Value = _healthStart;
 		}
 
-		private void HealthInit(int teamId, int healthStart, int healthMin, int healthMax) {
-			_teamId = teamId;
-			_healthStart.Value = healthStart;
-			_healthMin.Value = healthMin;
-			_healthMax.Value = healthMax;
+		public void SetSettings(int teamId, int healthStart, int healthMin, int healthMax, bool resetHealth) {
+			this._teamId = teamId;
+			this._healthStart.Value = healthStart;
+			this._healthMin.Value = healthMin;
+			this._healthMax.Value = healthMax;
 
-			_healthCurrent.Value = _healthStart;
-		}
-
-		private void HealthAwake() {
-			// Set initial health.
-			_healthCurrent.Value = _healthStart;
+			if (resetHealth) {
+				this._health.Value = _healthStart;
+			}
 		}
 
 		private void AdjustHealth(int delta) {
@@ -101,27 +128,27 @@ namespace Gruel.Actor {
 			}
 		
 			// Adjust health.
-			_healthCurrent.Value = Mathf.Clamp(_healthCurrent + delta, _healthMin, _healthMax);
+			_health.Value = Mathf.Clamp(_health + delta, _healthMin, _healthMax);
 
 			// Call onHealthChanged action.
-			_onHealthChanged?.Invoke(_healthCurrent, delta);
+			_onHealthChanged?.Invoke(_health, delta);
 		
-			// Call onHealthAdded action.
+			// Call healed action.
 			if (delta > 0) {
-				_onHealthAdded?.Invoke(_healthCurrent, delta);
+				_onHealed?.Invoke(_health, delta);
 			}
 		
-			// Call onHealthRemoved action.
+			// Call damaged action.
 			if (delta < 0) {
-				_onHealthRemoved?.Invoke(_healthCurrent, delta);
+				_onDamaged?.Invoke(_health, delta);
 			}
 
 			// Call onHealthEmpty action.
-			if (_healthCurrent <= _healthMin) {
+			if (_health <= _healthMin) {
 				_onHealthEmpty?.Invoke();
 			}
 		}
-#endregion Health
-	
+#endregion ActorHealth
+
 	}
 }

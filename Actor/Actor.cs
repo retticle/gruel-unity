@@ -7,13 +7,17 @@ using UnityEngine;
 namespace Gruel.Actor {
 	public abstract class Actor : MonoBehaviour, ITimeDilatable {
 		
-#region Init
-		protected void Init() {
+#region MonoBehaviour
+		protected virtual void Awake() {
 			TraitsInit();
 			TimeDilationInit();
 		}
-#endregion Init
 
+		protected virtual void Start() {
+			
+		}
+#endregion MonoBehaviour
+		
 #region Traits
 		[Header("Traits")]
 		[SerializeField]
@@ -27,18 +31,18 @@ namespace Gruel.Actor {
 			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
 				var trait = (IActorTrait)_traitComponents[i];
 				_traits.Add(trait);
-				trait.Init(this);
+				trait.InitializeTrait(this);
 			}
 		}
 
 		public void AddTrait(IActorTrait trait) {
 			_traits.Add(trait);
-			trait.Init(this);
+			trait.InitializeTrait(this);
 		}
 
 		public void RemoveTrait(IActorTrait trait) {
 			_traits.Remove(trait);
-			trait.Remove();
+			trait.RemoveTrait();
 		}
 
 		public T GetTrait<T>() where T : class, IActorTrait {
@@ -97,6 +101,10 @@ namespace Gruel.Actor {
 
 			_timeDilationAffectors.Remove(obj);
 			EvaluateTimeDilation();
+		}
+
+		public bool ContainsTimeDilationAffector(UnityEngine.Object obj) {
+			return _timeDilationAffectors.ContainsKey(obj);
 		}
 
 		protected void EvaluateTimeDilation() {

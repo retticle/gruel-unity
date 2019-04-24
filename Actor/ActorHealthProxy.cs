@@ -9,12 +9,14 @@ namespace Gruel.Actor {
 #endregion ActorHealthProxy
 		
 #region Interfaces
-		public int GetTeamId() {
-			return _actorHealth.GetTeamId();
+		public int TeamId {
+			get { return _actorHealth.TeamId; }
+			set { _actorHealth.TeamId = value; }
 		}
 		
-		public bool IsInvulnerable() {
-			return _actorHealth.IsInvulnerable();
+		public bool IsInvulnerable {
+			get { return _actorHealth.IsInvulnerable; }
+			set { _actorHealth.IsInvulnerable = value; }
 		}
 		
 		public void Damage(int damage) {

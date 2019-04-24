@@ -5,13 +5,13 @@ namespace Gruel.Actor {
 		/// Returns the damageable's teamId.
 		/// </summary>
 		/// <returns></returns>
-		int GetTeamId();
+		int TeamId { get; set; }
 		
 		/// <summary>
 		/// Returns if the damageable is currently invulnerable.
 		/// </summary>
 		/// <returns></returns>
-		bool IsInvulnerable();
+		bool IsInvulnerable { get; set; }
 
 		/// <summary>
 		/// Attempts to remove the amount of health specified.
@@ -22,7 +22,7 @@ namespace Gruel.Actor {
 		void Damage(int damage);
 
 		/// <summary>
-		/// Attempts to kill the actor regardless of it's current health.
+		/// Attempts to kill the damageable regardless of it's current health.
 		/// Invulnerability may override this.
 		/// </summary>
 		void Kill();
