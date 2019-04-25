@@ -143,6 +143,10 @@ namespace Gruel.Actor {
 #endregion TimeDilation
 		
 #region Physics
+		public virtual void SetKinematic(bool kinematic) {
+			
+		}
+		
 		public virtual void SetVelocity(Vector3 velocity) {
 		
 		}
