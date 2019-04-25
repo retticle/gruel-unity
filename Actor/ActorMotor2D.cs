@@ -66,6 +66,7 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 	private float _smoothY = 0.0f;
 	private const float _smoothTime = 0.25f;
 
+	public Action _onStartedFalling;
 	public Action _onLanded;
 	
 	private void SimulationInit() {
@@ -91,10 +92,16 @@ public class ActorMotor2D : MonoBehaviour, IActorTrait {
 		// Grounded.
 		_simulationResults._isGrounded = _cc.isGrounded;
 
-		// OnLanded callback.
+		// OnLanded event.
 		if (wasGrounded == false
 	    && _simulationResults._isGrounded) {
 			_onLanded?.Invoke();
+		}
+		
+		// StartedFalling event.
+		if (wasGrounded
+	    && _simulationResults._isGrounded == false) {
+			_onStartedFalling?.Invoke();
 		}
 		
 		// Set isWalking.
