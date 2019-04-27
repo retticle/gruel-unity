@@ -64,6 +64,16 @@ namespace Gruel.Actor {
 		}
 #endregion Traits
 		
+#region Team
+		[Header("Team")]
+		[SerializeField] private int _teamId = -1;
+		
+		public int TeamId {
+			get { return _teamId; }
+			set { _teamId = value; }
+		}
+#endregion Team
+		
 #region TimeDilation
 		[Header("TimeDilation")]
 		[SerializeField]
