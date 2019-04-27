@@ -18,6 +18,22 @@ namespace Gruel.Actor {
 		}
 #endregion MonoBehaviour
 		
+#region Info
+		[Header("Info")]
+		[SerializeField] private int _playerId = -1;
+		[SerializeField] private int _teamId = -1;
+
+		public int PlayerId {
+			get { return _playerId; }
+			set { _playerId = value; }
+		}
+		
+		public int TeamId {
+			get { return _teamId; }
+			set { _teamId = value; }
+		}
+#endregion Info
+		
 #region Traits
 		[Header("Traits")]
 		[SerializeField]
@@ -63,16 +79,6 @@ namespace Gruel.Actor {
 			return false;
 		}
 #endregion Traits
-		
-#region Team
-		[Header("Team")]
-		[SerializeField] private int _teamId = -1;
-		
-		public int TeamId {
-			get { return _teamId; }
-			set { _teamId = value; }
-		}
-#endregion Team
 		
 #region TimeDilation
 		[Header("TimeDilation")]
