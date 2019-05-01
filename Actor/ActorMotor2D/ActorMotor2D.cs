@@ -99,8 +99,8 @@ namespace Gruel.Actor.ActorMotor2D {
 	
 #region Simulation
 		[Header("Simulation")]
-	
 		[SerializeField] private bool _isKinematic = false;
+		[SerializeField] private float _gravityScalar = 1.0f;
 	
 		public TickFrame _tickFrame { get; private set; }
 	
@@ -115,6 +115,11 @@ namespace Gruel.Actor.ActorMotor2D {
 					_tickFrame._velocity = Vector3.zero;
 				}
 			}
+		}
+		
+		public float GravityScalar {
+			get { return _gravityScalar; }
+			set { _gravityScalar = value; }
 		}
 
 		private float _smoothX = 0.0f;
@@ -139,11 +144,12 @@ namespace Gruel.Actor.ActorMotor2D {
 		}
 
 		public void AddForce(Vector3 force) {
-			Debug.Log("ActorMotor.AddForce: " + force);
 			_tickFrame._velocityCarried += force;
 		}
 
 		public void Tick(float horizontal, bool jumpButtonDown, bool crouch) {
+			var customDeltaTime = Time.fixedDeltaTime * _actor._customTimeDilation;
+			
 			// Add input to tick frame.
 			_tickFrame._inputHorizontal = horizontal;
 			_tickFrame._inputJumpButtonDown = jumpButtonDown;
@@ -203,7 +209,7 @@ namespace Gruel.Actor.ActorMotor2D {
 				_tickFrame._velocityCarried.y = Mathf.SmoothDamp(_tickFrame._velocityCarried.y, 0.0f, ref _smoothY, _drag);
 		
 				// Gravity.
-				_tickFrame._velocityCarried.y += _gravity * Time.fixedDeltaTime * _actor._customTimeDilation;
+				_tickFrame._velocityCarried.y += (_gravity * _gravityScalar) * customDeltaTime;
 		
 				// Calculate final velocity.
 				_tickFrame._velocity = _tickFrame._velocityCarried + _tickFrame._velocityMovement;
@@ -212,7 +218,7 @@ namespace Gruel.Actor.ActorMotor2D {
 				_tickFrame._velocity = Vector3.ClampMagnitude(_tickFrame._velocity, _velocityMax);
 		
 				// Apply velocity.
-				_cc.Move(_tickFrame._velocity * Time.fixedDeltaTime * _actor._customTimeDilation);	
+				_cc.Move(_tickFrame._velocity * customDeltaTime);	
 			}
 		}
 #endregion Simulation
