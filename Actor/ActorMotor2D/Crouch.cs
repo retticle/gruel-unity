@@ -21,7 +21,9 @@ namespace Gruel.Actor.ActorMotor2D {
 		// Results.
 		public bool _isCrouching;
 		public bool _startedCrouching;
-		
+
+		public ActorMotor2DTraitResult Result { get; }
+
 		public void InitializeTrait(Actor actor, ActorMotor2D actorMotor2D) {
 			this._actor = actor;
 			this._actorMotor2D = actorMotor2D;

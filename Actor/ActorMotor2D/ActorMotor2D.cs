@@ -161,10 +161,8 @@ namespace Gruel.Actor.ActorMotor2D {
 			// Reset results.
 			_tickFrame.Reset();
 			
-			// Update raycast origins.
-			UpdateRaycastOrigins();
-			
 			// Detection.
+			UpdateRaycastOrigins();
 			HorizontalDetection();
 			VerticalDetection();
 		
@@ -189,28 +187,33 @@ namespace Gruel.Actor.ActorMotor2D {
 			}
 		
 			// Set isWalking.
-			if (Mathf.Abs(horizontal) > 0.0f) {
+			if (Mathf.Abs(_tickFrame._inputHorizontal) > 0.0f) {
 				_tickFrame._isWalking = true;
 			}
 
 			if (_isKinematic == false) {
+				// Gravity.
+				if (_tickFrame._isGrounded) {
+					// _tickFrame._velocityCarried.y = -_cc.stepOffset / customDeltaTime;
+					_tickFrame._velocityCarried.y = -1f;
+				} else {
+					_tickFrame._velocityCarried.y += (_gravity * _gravityScalar) * customDeltaTime;
+				}
+				
 				// Jump.
-				if (jumpButtonDown
+				if (_tickFrame._inputJumpButtonDown
 			    && _tickFrame._isGrounded) {
 					_tickFrame._isJumping = true;
 					_tickFrame._velocityCarried.y = _jumpForce;
 				}
 			
 				// Calculate movement velocity contribution.
-				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? horizontal * _walkSpeed : horizontal * _walkSpeed * _airControlScalar;
+				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? _tickFrame._inputHorizontal * _walkSpeed : _tickFrame._inputHorizontal * _walkSpeed * _airControlScalar;
 		
 				// Apply drag to the carried velocity.
 				_tickFrame._velocityCarried.x = Mathf.SmoothDamp(_tickFrame._velocityCarried.x, 0.0f, ref _smoothX, _drag);
 				_tickFrame._velocityCarried.y = Mathf.SmoothDamp(_tickFrame._velocityCarried.y, 0.0f, ref _smoothY, _drag);
-		
-				// Gravity.
-				_tickFrame._velocityCarried.y += (_gravity * _gravityScalar) * customDeltaTime;
-		
+
 				// Calculate final velocity.
 				_tickFrame._velocity = _tickFrame._velocityCarried + _tickFrame._velocityMovement;
 		
@@ -250,7 +253,6 @@ namespace Gruel.Actor.ActorMotor2D {
 			_distancesUp = new float[_verticalRayCount];
 			_distancesDown = new float[_verticalRayCount];
 			
-			UpdateRaycastOrigins();
 			UpdateRaySpacing();
 		}
 		
@@ -269,23 +271,8 @@ namespace Gruel.Actor.ActorMotor2D {
 		}
 
 		private void HorizontalDetection() {
-			// var directionX = (int)Mathf.Sign(velocity.x);
-			// var rayLength = Mathf.Abs(velocity.x);
 			var rayLength = _rayLength;
 
-			// for (int i = 0; i < _horizontalRayCount; i++) {
-			// 	var rayOrigin = (directionX == 1) ? _originBottomRight : _originBottomLeft;
-			// 	rayOrigin += Vector3.up * (_raySpacingHorizontal * i);
-			//
-			// 	RaycastHit hitInfo;
-			// 	bool hit = Physics.Raycast(rayOrigin, Vector3.right * directionX, out hitInfo, rayLength, _collisionMask);
-			// 	Debug.DrawRay(rayOrigin, Vector3.right * directionX * rayLength, Color.magenta);
-			//
-			// 	if (hit) {
-			// 		
-			// 	}
-			// }
-			
 			// Left.
 			for (int i = 0; i < _horizontalRayCount; i++) {
 				var rayOrigin = _originBottomLeft;
@@ -312,22 +299,7 @@ namespace Gruel.Actor.ActorMotor2D {
 		}
 
 		private void VerticalDetection() {
-			// var directionY = (int)Mathf.Sign(velocity.y);
-			// var rayLength = Mathf.Abs(velocity.y);
 			var rayLength = _rayLength;
-
-			// for (int i = 0; i < _verticalRayCount; i++) {
-			// 	var rayOrigin = (directionY == 1) ? _originTopLeft : _originBottomLeft;
-			// 	rayOrigin += Vector3.right * (_raySpacingVertical * i + velocity.x);
-			//
-			// 	RaycastHit hitInfo;
-			// 	var hit = Physics.Raycast(rayOrigin, Vector3.up * directionY, out hitInfo, rayLength, _collisionMask);
-			// 	Debug.DrawRay(rayOrigin, Vector3.up * directionY * rayLength, Color.magenta);
-			//
-			// 	if (hit) {
-			// 		
-			// 	}
-			// }
 			
 			// Up.
 			for (int i = 0; i < _verticalRayCount; i++) {
