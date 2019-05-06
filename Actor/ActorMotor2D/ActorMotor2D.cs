@@ -77,7 +77,9 @@ namespace Gruel.Actor.ActorMotor2D {
 		public float _velocityMax = 100.0f;
 		public float _airControlScalar = 1.0f;
 		public float _gravity = -9.8f;
-		public float _drag = 0.25f;
+
+		public float _dragGrounded = 0.25f;
+		public float _dragAirborne = 0.25f;
 	
 		[Header("Walk")]
 		public float _walkSpeed = 1.25f;
@@ -121,9 +123,6 @@ namespace Gruel.Actor.ActorMotor2D {
 			get { return _gravityScalar; }
 			set { _gravityScalar = value; }
 		}
-
-		private float _smoothX = 0.0f;
-		private float _smoothY = 0.0f;
 
 		/// <summary>
 		/// Invoked when the actor starts falling.
@@ -192,9 +191,15 @@ namespace Gruel.Actor.ActorMotor2D {
 			}
 
 			if (_isKinematic == false) {
+				// Apply drag to the carried velocity.
+				_tickFrame._velocityCarried = Vector3.Lerp(
+					_tickFrame._velocityCarried,
+					Vector3.zero,
+					(_tickFrame._isGrounded ? _dragGrounded : _dragAirborne) * customDeltaTime
+				);
+				
 				// Gravity.
 				if (_tickFrame._isGrounded) {
-					// _tickFrame._velocityCarried.y = -_cc.stepOffset / customDeltaTime;
 					_tickFrame._velocityCarried.y = -1f;
 				} else {
 					_tickFrame._velocityCarried.y += (_gravity * _gravityScalar) * customDeltaTime;
@@ -210,10 +215,6 @@ namespace Gruel.Actor.ActorMotor2D {
 				// Calculate movement velocity contribution.
 				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? _tickFrame._inputHorizontal * _walkSpeed : _tickFrame._inputHorizontal * _walkSpeed * _airControlScalar;
 		
-				// Apply drag to the carried velocity.
-				_tickFrame._velocityCarried.x = Mathf.SmoothDamp(_tickFrame._velocityCarried.x, 0.0f, ref _smoothX, _drag);
-				_tickFrame._velocityCarried.y = Mathf.SmoothDamp(_tickFrame._velocityCarried.y, 0.0f, ref _smoothY, _drag);
-
 				// Calculate final velocity.
 				_tickFrame._velocity = _tickFrame._velocityCarried + _tickFrame._velocityMovement;
 		
