@@ -199,8 +199,9 @@ namespace Gruel.Actor.ActorMotor2D {
 				);
 				
 				// Gravity.
-				if (_tickFrame._isGrounded) {
-					_tickFrame._velocityCarried.y = -1f;
+				if (_tickFrame._isGrounded
+				&& _tickFrame._velocityCarried.y < 0.0f) {
+					_tickFrame._velocityCarried.y = (_gravity * _gravityScalar) * Time.fixedDeltaTime;
 				} else {
 					_tickFrame._velocityCarried.y += (_gravity * _gravityScalar) * customDeltaTime;
 				}
