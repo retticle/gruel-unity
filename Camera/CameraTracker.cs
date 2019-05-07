@@ -16,18 +16,31 @@ namespace Gruel.Camera {
 		
 		private bool _trackTransform = false;
 		private Transform _trackedTransform = null;
-		private Vector3 _trackTransformOffset = Vector3.zero;
+		private Vector3 _offset = Vector3.zero;
 
 		private const float _trackSpeed = 5.0f;
+		
+		public Vector3 Offset {
+			get { return _offset; }
+			set {
+				_offset = value;
+				UpdateOffsetTransform();
+			}
+		}
 
 		public void Track(Transform transformToTrack, Vector3 offset) {
 			Debug.Log($"CameraTracker.Track: transform: {transformToTrack.name} | offset: {offset}");
 		
 			_trackTransform = true;
 			_trackedTransform = transformToTrack;
-			_trackTransformOffset = offset;
+			
+			// Save offset amount.
+			_offset = offset;
 
-			_offsetTransform.localPosition = _trackTransformOffset;
+			// Update OffsetTransform to the correct offset.
+			UpdateOffsetTransform();
+			
+			// Set TrackedTransform to the position of the transform we need to track.
 			_trackingTransform.position = _trackedTransform.position;
 		}
 
@@ -36,7 +49,7 @@ namespace Gruel.Camera {
 		
 			_trackTransform = false;
 			_trackedTransform = null;
-			_trackTransformOffset = Vector3.zero;
+			_offset = Vector3.zero;
 		}
 
 		private void CameraTrackerLateUpdate() {
@@ -46,6 +59,10 @@ namespace Gruel.Camera {
 				// var targetPosition = _trackedTransform.position + _trackTransformOffset;
 				// transform.position = Vector3.Lerp(transform.position, targetPosition, Time.unscaledDeltaTime * _trackSpeed);
 			}
+		}
+
+		private void UpdateOffsetTransform() {
+			_offsetTransform.localPosition = _offset;
 		}
 #endregion CameraTracker
 		

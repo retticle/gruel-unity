@@ -34,7 +34,7 @@ namespace Gruel.Camera {
 		}
 	
 		public Vector3 GetPosition() {
-			return transform.position;
+			return _camera.transform.position;
 		}
 	
 		public void SetPosition(Vector3 position) {
