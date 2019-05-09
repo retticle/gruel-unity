@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 
 namespace Gruel.Audio {
 	[CreateAssetMenu(menuName = "ScriptableObjects/SFXData")]
-	public class SFXData : ScriptableObject {
+	public class SfxData : ScriptableObject {
 
 		[Header("SFX")]
 		public AudioClip _audioClip;
@@ -33,7 +33,7 @@ namespace Gruel.Audio {
 		public float _pitchRndMin = 0.0f;
 		public float _pitchRndMax = 0.0f;
 
-		public static bool IsValid(SFXData sfxData) {
+		public static bool IsValid(SfxData sfxData) {
 			return (sfxData != null) && (sfxData._audioClip != null);
 		}
 

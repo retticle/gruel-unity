@@ -105,7 +105,7 @@ namespace Gruel.Actor {
 		/// </summary>
 		public Action _onHealthEmpty;
 
-		private void HealthInit() {
+		public void HealthInit() {
 			_health.Value = _healthStart;
 		}
 

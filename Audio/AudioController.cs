@@ -10,7 +10,7 @@ namespace Gruel.Audio {
 #region Init
 		public void Init() {
 			MusicInit();
-			SFXInit();
+			SfxInit();
 		}
 #endregion Init
 	
@@ -96,7 +96,7 @@ namespace Gruel.Audio {
 	
 		private const int _sfxSourcesMax = 16;
 
-		private void SFXInit() {
+		private void SfxInit() {
 			// Create sfxAudioSources array.
 			_sfxAudioSources = new AudioSource[_sfxSourcesMax];
 			_sfxRoutines = new ManagedCoroutine[_sfxSourcesMax];
@@ -111,12 +111,12 @@ namespace Gruel.Audio {
 			}
 		}
 
-		public void SetSFXEnabled(bool sfxEnabled) {
+		public void SetSfxEnabled(bool sfxEnabled) {
 			_sfxAudioMixerGroup.audioMixer.SetFloat("sfxVolume", sfxEnabled ? 0.0f : -80.0f);
 		}
-
-		public static int PlaySFX(SFXData sfxData, float delay = 0.0f) {
-			if (SFXData.IsValid(sfxData) == false) {
+		
+		public static int PlaySfx(SfxData sfxData, float delay = 0.0f) {
+			if (SfxData.IsValid(sfxData) == false) {
 				Debug.LogError("AudioController.PlaySFX: sfxData is not valid!");
 				return -1;
 			}
@@ -125,7 +125,7 @@ namespace Gruel.Audio {
 			if (_sfxAudioSourceQueue.Count < 1) {
 				Debug.LogWarning("AudioController.PlaySFX: no available audio sources! freeing up the oldest one");
 			
-				StopSFX(_sfxAudioSourceActive[0]);
+				StopSfx(_sfxAudioSourceActive[0]);
 			}
 		
 			// Get audioSourceId, and dequeue it.
@@ -135,12 +135,12 @@ namespace Gruel.Audio {
 			_sfxAudioSourceActive.Add(audioSourceId);
 
 			// Start PlaySFXCor.
-			_sfxRoutines[audioSourceId] = CoroutineRunner.StartManagedCoroutine(PlaySFXCor(audioSourceId, sfxData, delay));
+			_sfxRoutines[audioSourceId] = CoroutineRunner.StartManagedCoroutine(PlaySfxCor(audioSourceId, sfxData, delay));
 		
 			return audioSourceId;
 		}
 
-		public static void StopSFX(int audioSourceId) {
+		public static void StopSfx(int audioSourceId) {
 			// Stop the routine.
 			var routine = _sfxRoutines[audioSourceId];
 			routine?.Stop();
@@ -155,7 +155,11 @@ namespace Gruel.Audio {
 			_sfxAudioSourceQueue.Enqueue(audioSourceId);
 		}
 
-		private static IEnumerator PlaySFXCor(int audioSourceId, SFXData sfxData, float delay) {
+		public static bool IsSfxPlaying(int audioSourceId) {
+			return (_sfxRoutines[audioSourceId] != null) && (_sfxRoutines[audioSourceId]._isRunning);
+		}
+
+		private static IEnumerator PlaySfxCor(int audioSourceId, SfxData sfxData, float delay) {
 			// Get a reference to the AudioSource.
 			var audioSource = _sfxAudioSources[audioSourceId];
 		
@@ -197,7 +201,7 @@ namespace Gruel.Audio {
 				yield return null;
 			}
 		
-			StopSFX(audioSourceId);
+			StopSfx(audioSourceId);
 		}
 #endregion SFX
 
