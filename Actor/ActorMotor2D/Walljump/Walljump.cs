@@ -33,17 +33,17 @@ namespace Gruel.Actor.ActorMotor2D {
 		
 		private Actor _actor;
 		private ActorMotor2D _actorMotor2D;
-		private WalljumpTraitResult _result;
+		private WalljumpResult _result;
 
 		public ActorMotor2DTraitResult Result => _result;
 
 		public Action _onWalljump;
 
 		public void InitializeTrait(Actor actor, ActorMotor2D actorMotor2D) {
-			_result = new WalljumpTraitResult();
-			
 			this._actor = actor;
 			this._actorMotor2D = actorMotor2D;
+			
+			_result = new WalljumpResult();
 		}
 
 		public void RemoveTrait() {}

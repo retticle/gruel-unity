@@ -214,7 +214,8 @@ namespace Gruel.Actor.ActorMotor2D {
 				}
 			
 				// Calculate movement velocity contribution.
-				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? _tickFrame._inputHorizontal * _walkSpeed : _tickFrame._inputHorizontal * _walkSpeed * _airControlScalar;
+				var walkSpeed = _tickFrame._inputHorizontal * _walkSpeed;
+				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? walkSpeed : walkSpeed * _airControlScalar;
 		
 				// Calculate final velocity.
 				_tickFrame._velocity = _tickFrame._velocityCarried + _tickFrame._velocityMovement;
