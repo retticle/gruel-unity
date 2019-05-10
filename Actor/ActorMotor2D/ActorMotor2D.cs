@@ -103,6 +103,7 @@ namespace Gruel.Actor.ActorMotor2D {
 		[Header("Simulation")]
 		[SerializeField] private bool _isKinematic = false;
 		[SerializeField] private float _gravityScalar = 1.0f;
+		[SerializeField] private float _walkSpeedScalar = 1.0f;
 	
 		public TickFrame _tickFrame { get; private set; }
 	
@@ -122,6 +123,11 @@ namespace Gruel.Actor.ActorMotor2D {
 		public float GravityScalar {
 			get { return _gravityScalar; }
 			set { _gravityScalar = value; }
+		}
+
+		public float WalkSpeedScalar {
+			get { return _walkSpeedScalar; }
+			set { _walkSpeedScalar = value; }
 		}
 
 		/// <summary>
@@ -214,7 +220,7 @@ namespace Gruel.Actor.ActorMotor2D {
 				}
 			
 				// Calculate movement velocity contribution.
-				var walkSpeed = _tickFrame._inputHorizontal * _walkSpeed;
+				var walkSpeed = _tickFrame._inputHorizontal * (_walkSpeed * _walkSpeedScalar);
 				_tickFrame._velocityMovement.x = _tickFrame._isGrounded ? walkSpeed : walkSpeed * _airControlScalar;
 		
 				// Calculate final velocity.
