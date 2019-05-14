@@ -181,18 +181,19 @@ namespace Gruel.Actor.ActorMotor2D {
 
 			// OnLanded event.
 			if (wasGrounded == false
-			    && _tickFrame._isGrounded) {
+			&& _tickFrame._isGrounded) {
 				_onLanded?.Invoke();
 			}
 		
 			// OnStartedFalling event.
 			if (wasGrounded
-			    && _tickFrame._isGrounded == false) {
+			&& _tickFrame._isGrounded == false) {
 				_onStartedFalling?.Invoke();
 			}
 		
 			// Set isWalking.
-			if (Mathf.Abs(_tickFrame._inputHorizontal) > 0.0f) {
+			if (Mathf.Abs(_tickFrame._inputHorizontal) > 0.0f
+			&& _walkSpeedScalar > 0.0f) {
 				_tickFrame._isWalking = true;
 			}
 
