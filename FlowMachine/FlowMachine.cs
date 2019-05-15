@@ -25,7 +25,7 @@ namespace Gruel.FlowMachine {
 
 		public void StartFlow(Action onFlowCompleteCallback = null) {
 			if (_flowCor != null
-		    && _flowCor._isRunning) {
+		    && _flowCor.IsRunning) {
 				Debug.LogError($"{_flowMachineName}.FlowMachine.StartFlow: Flow is already running!");
 				return;
 			}

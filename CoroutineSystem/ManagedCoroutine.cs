@@ -4,34 +4,34 @@ using UnityEngine;
 namespace Gruel.CoroutineSystem {
 	public class ManagedCoroutine {
 	
-		public bool _isRunning { get; private set; }
-		public Coroutine _rootRoutine { get; private set; }
-		public Coroutine _childRoutine { get; private set; }
+		public bool IsRunning { get; private set; }
+		public Coroutine RootRoutine { get; private set; }
+		public Coroutine ChildRoutine { get; private set; }
 
 		public ManagedCoroutine(IEnumerator routine) {
-			_rootRoutine = CoroutineRunner.StartCoroutine(RootRoutineCor(routine));
+			RootRoutine = CoroutineRunner.StartCoroutine(RootRoutineCor(routine));
 		}
 
 		public void Stop() {
-			if (_isRunning) {
-				if (_rootRoutine != null) {
-					CoroutineRunner.StopCoroutine(_rootRoutine);
-					_rootRoutine = null;
+			if (IsRunning) {
+				if (RootRoutine != null) {
+					CoroutineRunner.StopCoroutine(RootRoutine);
+					RootRoutine = null;
 				}
 
-				if (_childRoutine != null) {
-					CoroutineRunner.StopCoroutine(_childRoutine);
-					_childRoutine = null;
+				if (ChildRoutine != null) {
+					CoroutineRunner.StopCoroutine(ChildRoutine);
+					ChildRoutine = null;
 				}
 
-				_isRunning = false;
+				IsRunning = false;
 			}
 		}
 
 		private IEnumerator RootRoutineCor(IEnumerator routine) {
-			_isRunning = true;
-			yield return _childRoutine = CoroutineRunner.StartCoroutine(routine);
-			_isRunning = false;
+			IsRunning = true;
+			yield return ChildRoutine = CoroutineRunner.StartCoroutine(routine);
+			IsRunning = false;
 		}
 	
 	}

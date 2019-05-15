@@ -46,7 +46,7 @@ namespace Gruel.Audio {
 		
 			// Check if there is a StopMusicCor running.
 			if (_stopMusicCor != null
-		    && _stopMusicCor._isRunning) {
+		    && _stopMusicCor.IsRunning) {
 				_stopMusicCor.Stop();
 			}
 
@@ -156,7 +156,7 @@ namespace Gruel.Audio {
 		}
 
 		public static bool IsSfxPlaying(int audioSourceId) {
-			return (_sfxRoutines[audioSourceId] != null) && (_sfxRoutines[audioSourceId]._isRunning);
+			return (_sfxRoutines[audioSourceId] != null) && (_sfxRoutines[audioSourceId].IsRunning);
 		}
 
 		private static IEnumerator PlaySfxCor(int audioSourceId, SfxData sfxData, float delay) {
