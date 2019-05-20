@@ -10,7 +10,7 @@ namespace Gruel.Actor.ActorMotor2D {
 		private Actor _actor;
 	
 		public void InitializeTrait(Actor actor) {
-			this._actor = actor;
+			_actor = actor;
 		
 			TraitsInit();
 			PhysicsSettingsInit();
@@ -145,10 +145,20 @@ namespace Gruel.Actor.ActorMotor2D {
 		}
 
 		public void SetVelocity(Vector3 velocity) {
+			// Do not change velocity is IsKinematic.
+			if (_isKinematic) {
+				return;
+			}
+			
 			_tickFrame._velocityCarried = velocity;
 		}
 
 		public void AddForce(Vector3 force) {
+			// Do not add force if IsKinematic.
+			if (_isKinematic) {
+				return;
+			}
+			
 			_tickFrame._velocityCarried += force;
 		}
 
