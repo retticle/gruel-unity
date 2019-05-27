@@ -24,7 +24,7 @@ namespace Gruel.Camera {
 			get { return _offset; }
 			set {
 				_offset = value;
-				UpdateOffsetTransform();
+				OffsetChanged();
 			}
 		}
 
@@ -34,11 +34,8 @@ namespace Gruel.Camera {
 			_trackTransform = true;
 			_trackedTransform = transformToTrack;
 			
-			// Save offset amount.
-			_offset = offset;
-
-			// Update OffsetTransform to the correct offset.
-			UpdateOffsetTransform();
+			// Set offset.
+			Offset = offset;
 			
 			// Set TrackedTransform to the position of the transform we need to track.
 			_trackingTransform.position = _trackedTransform.position;
@@ -61,7 +58,7 @@ namespace Gruel.Camera {
 			}
 		}
 
-		private void UpdateOffsetTransform() {
+		private void OffsetChanged() {
 			_offsetTransform.localPosition = _offset;
 		}
 #endregion CameraTracker
