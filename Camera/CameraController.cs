@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Gruel.Camera {
 	public class CameraController : MonoBehaviour {
@@ -8,6 +10,7 @@ namespace Gruel.Camera {
 #region Init
 		private void Awake() {
 			CameraControllerInit();
+			TraitsInit();
 		}
 #endregion Init
 	
@@ -15,7 +18,6 @@ namespace Gruel.Camera {
 		public static CameraController _instance { get; private set; }
 
 		private void CameraControllerInit() {
-			// Setup instance.
 			if (_instance != null) {
 				Debug.LogError("CameraController: There is already an instance of CameraController!");
 				Destroy(gameObject);
@@ -29,7 +31,7 @@ namespace Gruel.Camera {
 		[Header("Camera")]
 		[SerializeField] private UnityEngine.Camera _camera;
 
-		public UnityEngine.Camera GetCamera() {
+		public UnityEngine.Camera Camera() {
 			return _camera;
 		}
 	
@@ -50,17 +52,36 @@ namespace Gruel.Camera {
 		
 #region Traits
 		[Header("Traits")]
-		[SerializeField] private CameraTrait[] _cameraTraits = new CameraTrait[0];
+		[FormerlySerializedAs("_cameraTraits")]
+		[SerializeField] private CameraTrait[] _traitComponents;
+
+		private List<CameraTrait> _traits;
+
+		private void TraitsInit() {
+			_traits = new List<CameraTrait>();
+
+			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
+				AddTrait(_traitComponents[i]);
+			}
+		}
+
+		public void AddTrait(CameraTrait trait) {
+			_traits.Add(trait);
+		}
+
+		public void RemoveTrait(CameraTrait trait) {
+			_traits.Remove(trait);
+		}
 		
 		public T GetTrait<T>() where T : CameraTrait {
-			return _cameraTraits.OfType<T>().Select(trait => trait).FirstOrDefault();
+			return _traits.OfType<T>().Select(trait => trait).FirstOrDefault();
 		}
 
 		public bool TryGetTrait<T>(out T outTrait) where T : CameraTrait {
 			var type = typeof(T);
 			outTrait = null;
 
-			foreach (var trait in _cameraTraits) {
+			foreach (var trait in _traits) {
 				if (trait.GetType() == type) {
 					outTrait = (T)trait;
 					return true;

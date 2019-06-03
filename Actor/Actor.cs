@@ -36,10 +36,9 @@ namespace Gruel.Actor {
 		
 #region Traits
 		[Header("Traits")]
-		[SerializeField]
-		private Component[] _traitComponents = new Component[0];
+		[SerializeField] private Component[] _traitComponents = new Component[0];
 
-		private List<IActorTrait> _traits = null;
+		private List<IActorTrait> _traits;
 
 		private void TraitsInit() {
 			_traits = new List<IActorTrait>();
