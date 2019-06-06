@@ -44,8 +44,8 @@ namespace Gruel.Localization {
 		[SerializeField] private bool _autoGetComponents = true;
 	
 		[Header("Text")]
-		[SerializeField] private Text _text = null;
-		private RectTransform _rect = null;
+		[SerializeField] private Text _text;
+		private RectTransform _rect;
 	
 		// [Header("TextMeshPro")]
 		// [SerializeField] private TextMeshPro _tmp = null;
@@ -53,8 +53,12 @@ namespace Gruel.Localization {
 
 		[Header("Translation Settings")]
 		[SerializeField] private LocalizationConfig _config;
+
+		[SerializeField] private bool _replaceTextUsingKey = true;
+		
 		[SerializeField] private string _key;
 		[SerializeField] private string[] _stringReplace = new string[0];
+		[SerializeField] private KeyReplacementPair[] _keyReplacements;
 
 		private void TextAwake() {
 			// Get text components.
@@ -71,28 +75,33 @@ namespace Gruel.Localization {
 		}
 	
 		private void SetText() {
-			// Get translation.
-			var translationData = _config.GetTranslation(_key);
-			var translation = translationData._translation;
-
+			var text = _replaceTextUsingKey ? _config.GetTranslation(_key)._translation : _text.text;
+			
 			// Replace parts of translation.
 			for (int i = 0, n = _stringReplace.Length; i < n; i++) {
-				translation = translation.Replace("{ + i + }", _stringReplace[i]);
+				text = text.Replace("{ + i + }", _stringReplace[i]);
 			}
-
+			
+			// Replace target keys with replacement keys.
+			for (int i = 0, n = _keyReplacements.Length; i < n; i++) {
+				var pair = _keyReplacements[i];
+				var replacementTranslation = _config.GetTranslation(pair._replacementKey)._translation;
+				text = text.Replace(
+					"{" + pair._targetKey + "}", 
+					replacementTranslation
+				);
+			}
+			
 			// Set text component's text.
 			switch (_textType) {
 				case ETextType.Text:
-					_text.text = translation;
-				
+					_text.text = text;
 					break;
 				case ETextType.TextMeshPro:
-					// _tmp.text = translation;
-				
+					// _tmp.text = text;
 					break;
 				case ETextType.TextMeshProUgui:
-					// _tmpUgui.text = translation;
-				
+					// _tmpUgui.text = text;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

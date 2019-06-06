@@ -101,7 +101,7 @@ namespace Gruel.Actor.ActorMotor2D {
 	
 #region Simulation
 		[Header("Simulation")]
-		[SerializeField] private bool _isKinematic = false;
+		[SerializeField] private bool _isKinematic;
 		[SerializeField] private float _gravityScalar = 1.0f;
 		[SerializeField] private float _walkSpeedScalar = 1.0f;
 	
