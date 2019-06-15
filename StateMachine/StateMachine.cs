@@ -6,18 +6,24 @@ namespace Gruel.StateMachine {
 
 #region Init
 		public StateMachine(string stateMachineName) {
-			this._stateMachineName = stateMachineName;
+			_stateMachineName = stateMachineName;
 		}
 #endregion Init
 
 #region State Machine
-		private string _stateMachineName;
+		private readonly string _stateMachineName;
 		private Dictionary<int, IState> _states = new Dictionary<int, IState>();
+
+		private const int UninitializedStateId = -1;
+		private const string UninitializedStateName = "Uninitialized";
 	
-		private int _stateCurrent = -1;
+		private int _stateCurrent = UninitializedStateId;
+		
+		public int PreviousState { get; private set; }
+		
 		public int State {
-			get { return _stateCurrent; }
-			set { SetState(value); }
+			get => _stateCurrent;
+			set => SetState(value);
 		}
 
 		public void AddState(int stateId, IState state) {
@@ -29,20 +35,21 @@ namespace Gruel.StateMachine {
 			Debug.LogFormat(
 				"{0}.StateMachine.SetState: switching from {1} to {2}",
 				_stateMachineName,
-				_stateCurrent == -1 ? "Uninitialized" : _states[_stateCurrent].StateName(),
-				stateNext == -1 ? "Uninitialized" : _states[stateNext].StateName()
+				_stateCurrent == UninitializedStateId ? UninitializedStateName : _states[_stateCurrent].StateName(),
+				stateNext == UninitializedStateId ? UninitializedStateName : _states[stateNext].StateName()
 			);
 
 			// Exit the current state.
-			if (_stateCurrent != -1) {
+			if (_stateCurrent != UninitializedStateId) {
 				_states[_stateCurrent].StateExit();
 			}
 
 			// Switch state.
+			PreviousState = _stateCurrent;
 			_stateCurrent = stateNext;
 
 			// Enter the new state.
-			if (_stateCurrent != -1) {
+			if (_stateCurrent != UninitializedStateId) {
 				_states[_stateCurrent].StateEnter();
 			}
 		}

@@ -1,41 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Gruel.Camera {
 	public class CameraController : MonoBehaviour {
-	
-#region Init
-		private void Awake() {
-			CameraControllerInit();
-			TraitsInit();
-		}
-#endregion Init
-	
-#region CameraController
-		public static CameraController _instance { get; private set; }
-
-		private void CameraControllerInit() {
-			if (_instance != null) {
-				Debug.LogError("CameraController: There is already an instance of CameraController!");
-				Destroy(gameObject);
-			} else {
-				_instance = this;
-			}
-		}
-#endregion CameraController
-
-#region Camera
-		[Header("Camera")]
-		[SerializeField] private UnityEngine.Camera _camera;
-
+		
+#region Public
+		public static CameraController Instance { get; private set; }
+		
 		public UnityEngine.Camera Camera() {
 			return _camera;
 		}
+		
+		public float OrthoSize => _camera.orthographicSize;
 	
-		public Vector3 GetPosition() {
+		public Vector3 CameraPosition() {
 			return _camera.transform.position;
 		}
 	
@@ -43,26 +23,6 @@ namespace Gruel.Camera {
 			Debug.Log($"CameraController.SetPosition: {position}");
 		
 			transform.position = position;
-		}
-
-		public float GetOrthoSize() {
-			return _camera.orthographicSize;
-		}
-#endregion Camera
-		
-#region Traits
-		[Header("Traits")]
-		[FormerlySerializedAs("_cameraTraits")]
-		[SerializeField] private CameraTrait[] _traitComponents;
-
-		private List<CameraTrait> _traits;
-
-		private void TraitsInit() {
-			_traits = new List<CameraTrait>();
-
-			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
-				AddTrait(_traitComponents[i]);
-			}
 		}
 
 		public void AddTrait(CameraTrait trait) {
@@ -90,22 +50,35 @@ namespace Gruel.Camera {
 
 			return false;
 		}
-#endregion Traits
-	
-#region Move
-		private Tweener _moveTween = null;
-	
-		public void Move(Vector3 position, float duration, Ease ease = Ease.OutExpo) {
-			// If a previous tween is running stop it.
-			if (_moveTween != null
-			    && _moveTween.active) {
-				_moveTween.Kill();
-			}
+#endregion Public
+		
+#region Private
+		[Header("Camera")]
+		[SerializeField] private UnityEngine.Camera _camera;
+		
+		[Header("Traits")]
+		[FormerlySerializedAs("_cameraTraits")]
+		[SerializeField] private CameraTrait[] _traitComponents;
 
-			_moveTween = transform.DOMove(position, duration, false)
-			                      .SetEase(ease);
+		private List<CameraTrait> _traits;
+		
+		private void Awake() {
+			// Setup instance.
+			if (Instance != null) {
+				Debug.LogError("CameraController: There is already an instance of CameraController!");
+				Destroy(gameObject);
+			} else {
+				Instance = this;
+			}
+			
+			// Add initial component traits.
+			_traits = new List<CameraTrait>();
+
+			for (int i = 0, n = _traitComponents.Length; i < n; i++) {
+				AddTrait(_traitComponents[i]);
+			}
 		}
-#endregion Move
+#endregion Private
 
 	}
 }

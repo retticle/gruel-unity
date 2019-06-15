@@ -14,8 +14,8 @@ namespace Gruel.Camera {
 		[SerializeField] private Transform _trackingTransform;
 		[SerializeField] private Transform _offsetTransform;
 		
-		private bool _trackTransform = false;
-		private Transform _trackedTransform = null;
+		private bool _trackTransform;
+		private Transform _trackedTransform;
 		private Vector3 _offset = Vector3.zero;
 
 		private const float _trackSpeed = 5.0f;
