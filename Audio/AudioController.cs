@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Gruel.Audio {
-	public class AudioController : MonoBehaviour{
+	public class AudioController : MonoBehaviour {
 
 #region Init
 		public void Init() {
+			CoreInit();
 			MusicInit();
 			SfxInit();
 		}
@@ -17,16 +18,26 @@ namespace Gruel.Audio {
 #region Core
 		[Header("Core")]
 		[SerializeField] private GameObject _audioSourceContainer;
+		
+		private static AudioController Instance { get; set; }
+
+		private void CoreInit() {
+			if (Instance != null) {
+				Debug.LogError("AudioController: There is already an instance of AudioController!");
+				Destroy(gameObject);
+			} else {
+				Instance = this;
+			}
+		}
 #endregion Core
 	
 #region Music
 		[Header("Music")]
 		[SerializeField] private AudioMixerGroup _musicAudioMixerGroup;
+		[SerializeField] private float _musicFadeDuration = 0.3f;
 	
 		private static AudioSource _musicAudioSource;
-
-		private const float _musicFadeDuration = 0.3f;
-		private static ManagedCoroutine _stopMusicCor = null;
+		private static ManagedCoroutine _stopMusicCor;
 		
 		private void MusicInit() {
 			_musicAudioSource = _audioSourceContainer.AddComponent<AudioSource>();
@@ -39,7 +50,7 @@ namespace Gruel.Audio {
 
 		public static void PlayMusic(MusicData musicData) {
 			if (musicData == null
-			    || musicData._audioClip == null) {
+			|| musicData._audioClip == null) {
 				Debug.LogError("AudioController.PlayMusic: musicData is not valid!");
 				return;
 			}
@@ -69,8 +80,8 @@ namespace Gruel.Audio {
 			var startVolume = _musicAudioSource.volume;
 		
 			var time = 0.0f;
-			while (time < _musicFadeDuration) {
-				_musicAudioSource.volume = Mathf.Lerp(startVolume, 0.0f, time / _musicFadeDuration);
+			while (time < Instance._musicFadeDuration) {
+				_musicAudioSource.volume = Mathf.Lerp(startVolume, 0.0f, time / Instance._musicFadeDuration);
 
 				time += Time.unscaledDeltaTime;
 				yield return null;

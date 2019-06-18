@@ -24,16 +24,14 @@ namespace Gruel.Localization {
 	
 #region Events
 		private void EventsAwake() {
-			// Subscribe to events.
-			_config.AddLocaleChangedListener(OnLocaleChanged);
+			LocalizationController.OnLocaleChanged += LocaleChanged;
 		}
 
 		private void EventsOnDestroy() {
-			// Unsubscribe to events.
-			_config.RemoveLocaleChangedListener(OnLocaleChanged);
+			LocalizationController.OnLocaleChanged -= LocaleChanged;
 		}
 	
-		private void OnLocaleChanged() {
+		private void LocaleChanged(SystemLanguage locale) {
 			SetText();
 		}
 #endregion Events
@@ -52,10 +50,7 @@ namespace Gruel.Localization {
 		// [SerializeField] private TextMeshProUGUI _tmpUgui = null;
 
 		[Header("Translation Settings")]
-		[SerializeField] private LocalizationConfig _config;
-
 		[SerializeField] private bool _replaceTextUsingKey = true;
-		
 		[SerializeField] private string _key;
 		[SerializeField] private string[] _stringReplace = new string[0];
 		[SerializeField] private KeyReplacementPair[] _keyReplacements;
@@ -75,7 +70,7 @@ namespace Gruel.Localization {
 		}
 	
 		private void SetText() {
-			var text = _replaceTextUsingKey ? _config.GetTranslation(_key)._translation : _text.text;
+			var text = _replaceTextUsingKey ? LocalizationController.GetTranslation(_key) : _text.text;
 			
 			// Replace parts of translation.
 			for (int i = 0, n = _stringReplace.Length; i < n; i++) {
@@ -85,7 +80,7 @@ namespace Gruel.Localization {
 			// Replace target keys with replacement keys.
 			for (int i = 0, n = _keyReplacements.Length; i < n; i++) {
 				var pair = _keyReplacements[i];
-				var replacementTranslation = _config.GetTranslation(pair._replacementKey)._translation;
+				var replacementTranslation = LocalizationController.GetTranslation(pair._replacementKey);
 				text = text.Replace(
 					"{" + pair._targetKey + "}", 
 					replacementTranslation
