@@ -5,38 +5,7 @@ using UnityEngine.UI;
 namespace Gruel.Localization {
 	public class LocalizedText : MonoBehaviour {
 	
-#region Init
-		private void Awake() {
-			TextAwake();
-			EventsAwake();
-		
-			SetText();
-		}
-
-		private void Start() {
-			TextStart();
-		}
-
-		private void OnDestroy() {
-			EventsOnDestroy();
-		}
-#endregion Init
-	
-#region Events
-		private void EventsAwake() {
-			LocalizationController.OnLocaleChanged += LocaleChanged;
-		}
-
-		private void EventsOnDestroy() {
-			LocalizationController.OnLocaleChanged -= LocaleChanged;
-		}
-	
-		private void LocaleChanged(SystemLanguage locale) {
-			SetText();
-		}
-#endregion Events
-	
-#region Text
+#region Fields
 		[Header("Text Settings")]
 		[SerializeField] private ETextType _textType = ETextType.Text;
 		[SerializeField] private bool _autoGetComponents = true;
@@ -54,21 +23,39 @@ namespace Gruel.Localization {
 		[SerializeField] private string _key;
 		[SerializeField] private string[] _stringReplace = new string[0];
 		[SerializeField] private KeyReplacementPair[] _keyReplacements;
+#endregion Fields
 
-		private void TextAwake() {
+#region Public Methods
+
+#endregion Public Methods
+
+#region Private Methods
+		private void Awake() {
 			// Get text components.
 			if (_autoGetComponents) {
 				GetTextComponent();
 			}
+			
+			LocalizationController.OnLocaleChanged += LocaleChanged;
+		
+			SetText();
 		}
 
-		private void TextStart() {
+		private void Start() {
 			// If there's a rect transform rebuild the layout.
 			if (_rect != null) {
 				LayoutRebuilder.ForceRebuildLayoutImmediate(_rect);
 			}
 		}
-	
+
+		private void OnDestroy() {
+			LocalizationController.OnLocaleChanged -= LocaleChanged;
+		}
+		
+		private void LocaleChanged(SystemLanguage locale) {
+			SetText();
+		}
+		
 		private void SetText() {
 			var text = _replaceTextUsingKey ? LocalizationController.GetTranslation(_key) : _text.text;
 			
@@ -128,7 +115,7 @@ namespace Gruel.Localization {
 					throw new ArgumentOutOfRangeException();
 			}
 		}
-#endregion Text
+#endregion Private Methods
 
 	}
 }
