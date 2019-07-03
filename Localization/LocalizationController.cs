@@ -4,9 +4,8 @@ using UnityEngine;
 namespace Gruel.Localization {
 	public class LocalizationController : MonoBehaviour {
 
-#region Public
+#region Properties
 		public static Action<SystemLanguage> OnLocaleChanged;
-		
 		public static bool Initialized { get; private set; }
 		
 		public static SystemLanguage Locale {
@@ -16,7 +15,18 @@ namespace Gruel.Localization {
 				OnLocaleChanged?.Invoke(Instance._locale);
 			}
 		}
+#endregion Properties
 		
+#region Fields
+		[Header("Config")]
+		[SerializeField] private LocalizationConfig _config;
+		
+		private static LocalizationController Instance { get; set; }
+		
+		private SystemLanguage _locale = SystemLanguage.English;
+#endregion Fields
+		
+#region Public Methods
 		public void Init() {
 			if (Instance != null) {
 				Debug.LogError("LocalizationController: There is already an instance of LocalizationController!");
@@ -29,31 +39,25 @@ namespace Gruel.Localization {
 			Initialized = true;
 		}
 		
-		public static TranslationData GetTranslationData(SystemLanguage locale, string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(locale, key));
-		}
-		
 		public static TranslationData GetTranslationData(string key) {
 			return Instance._config.GetTranslationData(Tuple.Create(Instance._locale, key));
 		}
 		
-		public static string GetTranslation(SystemLanguage locale, string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(locale, key))._translation;
+		public static TranslationData GetTranslationData(SystemLanguage locale, string key) {
+			return Instance._config.GetTranslationData(Tuple.Create(locale, key));
 		}
 		
 		public static string GetTranslation(string key) {
 			return Instance._config.GetTranslationData(Tuple.Create(Instance._locale, key))._translation;
 		}
-#endregion Public
-
-#region Private
-		[Header("Config")]
-		[SerializeField] private LocalizationConfig _config;
 		
-		private static LocalizationController Instance { get; set; }
+		public static string GetTranslation(SystemLanguage locale, string key) {
+			return Instance._config.GetTranslationData(Tuple.Create(locale, key))._translation;
+		}
+#endregion Public Methods
 		
-		private SystemLanguage _locale = SystemLanguage.English;
-#endregion Private
+#region Private Methods
+#endregion Private Methods
 
 	}
 }
