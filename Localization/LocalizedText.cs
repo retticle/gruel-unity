@@ -36,7 +36,7 @@ namespace Gruel.Localization {
 				GetTextComponent();
 			}
 			
-			LocalizationController.OnLocaleChanged += LocaleChanged;
+			LocalizationController.OnLanguageChanged += LocaleChanged;
 		
 			SetText();
 		}
@@ -49,7 +49,7 @@ namespace Gruel.Localization {
 		}
 
 		private void OnDestroy() {
-			LocalizationController.OnLocaleChanged -= LocaleChanged;
+			LocalizationController.OnLanguageChanged -= LocaleChanged;
 		}
 		
 		private void LocaleChanged(SystemLanguage locale) {

@@ -7,23 +7,55 @@ namespace Gruel.Localization {
 	[CreateAssetMenu(menuName = "ScriptableObjects/LocalizationConfig")]
 	public class LocalizationConfig : ScriptableObject {
 		
-#region Public
+#region Properties
+		public SystemLanguage FallbackLanguage {
+			get => _fallbackLanguage;
+			set => _fallbackLanguage = value;
+		}
+#endregion Properties
+
+#region Fields
+		[Header("Settings")]
+		[SerializeField] private SystemLanguage _fallbackLanguage = SystemLanguage.English;
+		
+		[Header("Translation files")]
+		[SerializeField] private SystemLanguageTranslationPair[] _translationFiles;
+
+		private List<SystemLanguage> _languages;
+		private Dictionary<Tuple<SystemLanguage, string>, TranslationData> _translations;
+#endregion Fields
+
+#region Public Methods
 		public void ParseTranslations() {
 			Debug.Log("LocalizationController.ParseTranslations");
 		
+			_languages = new List<SystemLanguage>();
 			_translations = new Dictionary<Tuple<SystemLanguage, string>, TranslationData>();
 		
 			for (int i = 0, n = _translationFiles.Length; i < n; i++) {
-				var localeObj = JObject.Parse(_translationFiles[i].text);
-				var locale = (SystemLanguage)Enum.Parse(typeof(SystemLanguage), localeObj["locale"].Value<string>());
+				var pair = _translationFiles[i];
+//				var locale = (SystemLanguage)Enum.Parse(typeof(SystemLanguage), localeObj["locale"].Value<string>());
+				var language = pair._systemLanguage;
+				var localeObj = JObject.Parse(pair._translationFile.text);
 				var localeTranslations = localeObj["translations"];
+				
+				_languages.Add(language);
 			
 				foreach (var j in localeTranslations) {
 					var key = j["key"].Value<string>();
 					var translation = j["translation"].Value<string>();
-					_translations.Add(Tuple.Create(locale, key), new TranslationData(translation));
+					_translations.Add(Tuple.Create(language, key), new TranslationData(translation));
 				}
 			}
+		}
+
+		public bool IsLocaleAvailable(SystemLanguage language) {
+			if (_translations == null) {
+				Debug.LogError("LocalizationConfig.IsLocaleAvailable: translation files have not been parsed!");
+				return false;
+			}
+			
+			return _languages.Contains(language);
 		}
 
 		public TranslationData GetTranslationData(Tuple<SystemLanguage, string> key) {
@@ -31,7 +63,7 @@ namespace Gruel.Localization {
 				Debug.LogError("LocalizationConfig.GetTranslationData: translation files have not been parsed!");
 				return new TranslationData("NO TRANSLATION");
 			}
-
+			
 			try {
 				return _translations[key];
 			} catch (Exception ex) {
@@ -41,14 +73,11 @@ namespace Gruel.Localization {
 				return new TranslationData("NO TRANSLATION");
 			}
 		}
-#endregion Public
+#endregion Public Methods
 
-#region Private
-		[Header("Translation files")]
-		[SerializeField] private TextAsset[] _translationFiles = new TextAsset[0];
+#region Private Methods
 		
-		private Dictionary<Tuple<SystemLanguage, string>, TranslationData> _translations;
-#endregion Private
+#endregion Private Methods
 
 	}
 }

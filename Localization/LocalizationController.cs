@@ -5,15 +5,20 @@ namespace Gruel.Localization {
 	public class LocalizationController : MonoBehaviour {
 
 #region Properties
-		public static Action<SystemLanguage> OnLocaleChanged;
+		public static Action<SystemLanguage> OnLanguageChanged;
 		public static bool Initialized { get; private set; }
 		
-		public static SystemLanguage Locale {
-			get => Instance._locale;
+		public static SystemLanguage Language {
+			get => Instance._language;
 			set {
-				Instance._locale = value;
-				OnLocaleChanged?.Invoke(Instance._locale);
+				Instance._language = value;
+				OnLanguageChanged?.Invoke(Instance._language);
 			}
+		}
+
+		public static SystemLanguage FallbackLanguage {
+			get => Instance._config.FallbackLanguage;
+			set => Instance._config.FallbackLanguage = value;
 		}
 #endregion Properties
 		
@@ -23,7 +28,7 @@ namespace Gruel.Localization {
 		
 		private static LocalizationController Instance { get; set; }
 		
-		private SystemLanguage _locale = SystemLanguage.English;
+		private SystemLanguage _language = SystemLanguage.English;
 #endregion Fields
 		
 #region Public Methods
@@ -38,9 +43,13 @@ namespace Gruel.Localization {
 			_config.ParseTranslations();
 			Initialized = true;
 		}
+
+		public static bool IsLocaleAvailable(SystemLanguage language) {
+			return Instance._config.IsLocaleAvailable(language);
+		}
 		
 		public static TranslationData GetTranslationData(string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(Instance._locale, key));
+			return Instance._config.GetTranslationData(Tuple.Create(Instance._language, key));
 		}
 		
 		public static TranslationData GetTranslationData(SystemLanguage locale, string key) {
@@ -48,7 +57,7 @@ namespace Gruel.Localization {
 		}
 		
 		public static string GetTranslation(string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(Instance._locale, key))._translation;
+			return Instance._config.GetTranslationData(Tuple.Create(Instance._language, key))._translation;
 		}
 		
 		public static string GetTranslation(SystemLanguage locale, string key) {
