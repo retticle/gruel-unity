@@ -7,25 +7,30 @@ using UnityEngine;
 namespace Gruel.FlowMachine {
 	public class FlowMachine {
 
-#region Init
-		public FlowMachine(string flowMachineName) {
-			this._flowMachineName = flowMachineName;
-		}
-#endregion Init
-	
-#region Flow Machine
-		private string _flowMachineName;
+#region Properties
+#endregion Properties
+
+#region Fields
+		private readonly string _flowMachineName;
 	
 		private List<IFlow> _flows = new List<IFlow>();
-		private ManagedCoroutine _flowCor = null;
+		private ManagedCoroutine _flowCor;
+#endregion Fields
+	
+#region Constructor
+		public FlowMachine(string flowMachineName) {
+			_flowMachineName = flowMachineName;
+		}
+#endregion Constructor
 
+#region Public Methods
 		public void AddFlow(IFlow flow) {
 			_flows.Add(flow);
 		}
 
 		public void StartFlow(Action onFlowCompleteCallback = null) {
 			if (_flowCor != null
-		    && _flowCor.IsRunning) {
+				&& _flowCor.IsRunning) {
 				Debug.LogError($"{_flowMachineName}.FlowMachine.StartFlow: Flow is already running!");
 				return;
 			}
@@ -37,7 +42,9 @@ namespace Gruel.FlowMachine {
 			_flowCor?.Stop();
 			_flowCor = null;
 		}
+#endregion Public Methods
 
+#region Private Methods
 		private IEnumerator FlowCor(Action onFlowCompleteCallback) {
 			Debug.Log($"{_flowMachineName}.FlowMachine.FlowCor: Starting flow");
 
@@ -56,7 +63,7 @@ namespace Gruel.FlowMachine {
 
 			onFlowCompleteCallback?.Invoke();
 		}
-#endregion Flow Machine
+#endregion Private Methods
 
 	}
 }

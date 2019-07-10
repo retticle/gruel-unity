@@ -5,66 +5,66 @@ using UnityEngine;
 namespace Gruel.Camera {
 	public class CameraShake : CameraTrait {
 		
-#region Init
-		protected override void OnDestroy() {
-			base.OnDestroy();
-			
-			ShakeOnDestroy();
-		}
-#endregion Init
-		
-#region CameraShake
+#region Properties
+#endregion Properties
+
+#region Fields
 		[Header("CameraShake")]
 		[SerializeField] private Transform _shakeTransform;
 	
-		private ManagedCoroutine _shakeCor = null;
+		private ManagedCoroutine _shakeCor;
+#endregion Fields
 
-		private void ShakeOnDestroy() {
+#region Public Methods
+		public void Shake(CameraShakeData shakeData) {
+			_shakeCor?.Stop();
+			_shakeCor = CoroutineRunner.StartManagedCoroutine(ShakeCor(shakeData));
+		}
+#endregion Public Methods
+
+#region Private Methods
+		protected override void OnDestroy() {
+			base.OnDestroy();
 			_shakeCor?.Stop();
 		}
-
-		public void Shake(CameraShakeData _shakeData) {
-			_shakeCor?.Stop();
-			_shakeCor = CoroutineRunner.StartManagedCoroutine(ShakeCor(_shakeData));
-		}
-
+		
 		private IEnumerator ShakeCor(CameraShakeData _shakeData) {
 			// Create keyframe arrays.
-			var shakeKeysX = new Keyframe[_shakeData._points + 2];
-			var shakeKeysY = new Keyframe[_shakeData._points + 2];
-			var shakeKeysZ = new Keyframe[_shakeData._points + 2];
-			var keyDelay = _shakeData._duration / (_shakeData._points + 1);
+			var shakeKeysX = new Keyframe[_shakeData.Points + 2];
+			var shakeKeysY = new Keyframe[_shakeData.Points + 2];
+			var shakeKeysZ = new Keyframe[_shakeData.Points + 2];
+			var keyDelay = _shakeData.Duration / (_shakeData.Points + 1);
 		
 			// Zero out first and last keyframes.
 			shakeKeysX[0] = new Keyframe(0.0f, 0.0f);
 			shakeKeysY[0] = new Keyframe(0.0f, 0.0f);
 			shakeKeysZ[0] = new Keyframe(0.0f, 0.0f);
-			shakeKeysX[_shakeData._points + 1] = new Keyframe((_shakeData._points + 1) * keyDelay, 0.0f);
-			shakeKeysY[_shakeData._points + 1] = new Keyframe((_shakeData._points + 1) * keyDelay, 0.0f);
-			shakeKeysZ[_shakeData._points + 1] = new Keyframe((_shakeData._points + 1) * keyDelay, 0.0f);
+			shakeKeysX[_shakeData.Points + 1] = new Keyframe((_shakeData.Points + 1) * keyDelay, 0.0f);
+			shakeKeysY[_shakeData.Points + 1] = new Keyframe((_shakeData.Points + 1) * keyDelay, 0.0f);
+			shakeKeysZ[_shakeData.Points + 1] = new Keyframe((_shakeData.Points + 1) * keyDelay, 0.0f);
 
 			// Cache strength because we're going to modify it.
-			var strength = _shakeData._strength;
+			var strength = _shakeData.Strength;
 		
 			// Generate middle keyframes.
-			for (int i = 1; i < _shakeData._points; i++) {
+			for (int i = 1; i < _shakeData.Points; i++) {
 				shakeKeysX[i] = new Keyframe(
 					i * keyDelay, 
-					UnityEngine.Random.Range(-_shakeData._strength, _shakeData._strength)
+					UnityEngine.Random.Range(-_shakeData.Strength, _shakeData.Strength)
 				);
 			
 				shakeKeysY[i] = new Keyframe(
 					i * keyDelay, 
-					UnityEngine.Random.Range(-_shakeData._strength, _shakeData._strength)
+					UnityEngine.Random.Range(-_shakeData.Strength, _shakeData.Strength)
 				);
 			
 				shakeKeysZ[i] = new Keyframe(
 					i * keyDelay, 
-					UnityEngine.Random.Range(-_shakeData._strength, _shakeData._strength)
+					UnityEngine.Random.Range(-_shakeData.Strength, _shakeData.Strength)
 				);
 
 				// Decrease strength each frame by our decreaseFactor.
-				strength = Mathf.Clamp(strength - _shakeData._decreaseFactor, 0.0f, _shakeData._strength);
+				strength = Mathf.Clamp(strength - _shakeData.DecreaseFactor, 0.0f, _shakeData.Strength);
 			}
 		
 			// Create animation curves using the keyframes we generated.
@@ -74,7 +74,7 @@ namespace Gruel.Camera {
 
 			// Animate shakeTransform using the generated animation curves.
 			var time = 0.0f;
-			while (time < _shakeData._duration) {
+			while (time < _shakeData.Duration) {
 				_shakeTransform.localPosition = new Vector3(
 					curveX.Evaluate(time),
 					curveY.Evaluate(time),
@@ -88,7 +88,7 @@ namespace Gruel.Camera {
 			// Reset shakeTransform back to resting position.
 			_shakeTransform.localPosition = Vector3.zero;
 		}
-#endregion CameraShake
+#endregion Private Methods
 		
 	}
 }

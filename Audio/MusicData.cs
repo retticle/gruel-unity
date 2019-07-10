@@ -5,12 +5,36 @@ namespace Gruel.Audio {
 	[CreateAssetMenu(menuName = "ScriptableObjects/MusicData")]
 	public class MusicData : ScriptableObject {
 
-		[Header("Music")]
-		public AudioClip _audioClip;
-		public float _volume = 1.0f;
-		public float _pitch = 1.0f;
-		public bool _loop = false;
-		public AudioMixerGroup _mixerGroup;
+#region Properties
+		public AudioClip AudioClip {
+			get => _audioClip;
+		}
+
+		public float Volume {
+			get => _volume;
+		}
+
+		public float Pitch {
+			get => _pitch;
+		}
+
+		public bool Loop {
+			get => _loop;
+		}
+
+		public AudioMixerGroup AudioMixerGroup {
+			get => _mixerGroup;
+		}
+#endregion Properties
+
+#region Fields
+		[Header("Settings")]
+		[SerializeField] private AudioClip _audioClip;
+		[SerializeField] private float _volume = 1.0f;
+		[SerializeField] private float _pitch = 1.0f;
+		[SerializeField] private bool _loop;
+		[SerializeField] private AudioMixerGroup _mixerGroup;
+#endregion Fields
 
 	}
 }

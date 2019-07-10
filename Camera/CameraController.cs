@@ -6,19 +6,33 @@ using UnityEngine.Serialization;
 namespace Gruel.Camera {
 	public class CameraController : MonoBehaviour {
 		
-#region Public
+#region Properties
 		public static CameraController Instance { get; private set; }
 		
-		public UnityEngine.Camera Camera() {
-			return _camera;
+		public UnityEngine.Camera Camera {
+			get => _camera;
 		}
+
+		public float OrthoSize {
+			get => _camera.orthographicSize;
+		}
+	
+		public Vector3 CameraPosition {
+			get => _camera.transform.position;
+		}
+#endregion Properties
+
+#region Fields
+		[Header("Camera")]
+		[SerializeField] private UnityEngine.Camera _camera;
 		
-		public float OrthoSize => _camera.orthographicSize;
-	
-		public Vector3 CameraPosition() {
-			return _camera.transform.position;
-		}
-	
+		[Header("Traits")]
+		[FormerlySerializedAs("_cameraTraits")] [SerializeField] private CameraTrait[] _traitComponents;
+
+		private List<CameraTrait> _traits;
+#endregion Fields
+
+#region Public Methods
 		public void SetPosition(Vector3 position) {
 			Debug.Log($"CameraController.SetPosition: {position}");
 		
@@ -50,18 +64,9 @@ namespace Gruel.Camera {
 
 			return false;
 		}
-#endregion Public
-		
-#region Private
-		[Header("Camera")]
-		[SerializeField] private UnityEngine.Camera _camera;
-		
-		[Header("Traits")]
-		[FormerlySerializedAs("_cameraTraits")]
-		[SerializeField] private CameraTrait[] _traitComponents;
+#endregion Public Methods
 
-		private List<CameraTrait> _traits;
-		
+#region Private Methods
 		private void Awake() {
 			// Setup instance.
 			if (Instance != null) {
@@ -78,7 +83,7 @@ namespace Gruel.Camera {
 				AddTrait(_traitComponents[i]);
 			}
 		}
-#endregion Private
+#endregion Private Methods
 
 	}
 }

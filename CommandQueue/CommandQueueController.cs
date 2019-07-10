@@ -5,7 +5,14 @@ using UnityEngine;
 namespace Gruel.CommandQueue {
 	public class CommandQueueController : MonoBehaviour {
 		
-#region Public
+#region Properties
+#endregion Properties
+
+#region Fields
+		private static Queue<Action> _commandQueue;
+#endregion Fields
+
+#region Public Methods
 		public void Init() {
 			_commandQueue = new Queue<Action>();
 		}
@@ -13,17 +20,15 @@ namespace Gruel.CommandQueue {
 		public static void AddCommand(Action command) {
 			_commandQueue.Enqueue(command);
 		}
-#endregion Public
-		
-#region Private
-		private static Queue<Action> _commandQueue;
-		
+#endregion Public Methods
+
+#region Private Methods
 		private void Update() {
 			if (_commandQueue.Count > 0) {
 				_commandQueue.Dequeue()();
 			}
 		}
-#endregion Private
+#endregion Private Methods
 
 	}
 }

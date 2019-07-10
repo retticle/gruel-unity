@@ -4,10 +4,30 @@ namespace Gruel.Camera {
 	[CreateAssetMenu(menuName = "ScriptableObjects/CameraShakeData")]
 	public class CameraShakeData : ScriptableObject {
 
-		public float _strength;
-		public float _decreaseFactor;
-		public int _points;
-		public float _duration;
+#region Properties
+		public float Strength {
+			get => _strength;
+		}
+
+		public float DecreaseFactor {
+			get => _decreaseFactor;
+		}
+
+		public int Points {
+			get => _points;
+		}
+
+		public float Duration {
+			get => _duration;
+		}
+#endregion Properties
+
+#region Fields
+		[SerializeField] private float _strength;
+		[SerializeField] private float _decreaseFactor;
+		[SerializeField] private int _points;
+		[SerializeField] private float _duration;
+#endregion Fields
 
 	}
 }

@@ -4,26 +4,6 @@ using UnityEngine;
 namespace Gruel.CoroutineSystem {
 	public class CoroutineRunner : MonoBehaviour {
 	
-#region Init
-		public void Init() {
-			CoreInit();
-		}
-#endregion Init
-	
-#region Core
-		public static CoroutineRunner _instance { get; private set; }
-
-		private void CoreInit() {
-			// Setup instance.
-			if (_instance != null) {
-				Debug.LogError("RoutineRunner: There is already an instance of RoutineRunner!");
-				Destroy(gameObject);
-			} else {
-				_instance = this;
-			}
-		}
-#endregion Core
-	
 #region RoutineRunner
 		public new static Coroutine StartCoroutine(IEnumerator coroutine) {
 			// Make sure the CoroutineRunner object is still alive.
@@ -45,6 +25,29 @@ namespace Gruel.CoroutineSystem {
 			}
 		}
 #endregion RoutineRunner
+		
+#region Properties
+		
+#endregion Properties
+
+#region Fields
+		private static CoroutineRunner _instance;
+#endregion Fields
+
+#region Public Methods
+		public void Init() {
+			// Setup instance.
+			if (_instance != null) {
+				Debug.LogError("RoutineRunner: There is already an instance of RoutineRunner!");
+				Destroy(gameObject);
+			} else {
+				_instance = this;
+			}
+		}
+#endregion Public Methods
+
+#region Private Methods
+#endregion Private Methods
 	
 	}
 }
