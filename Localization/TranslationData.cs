@@ -1,11 +1,15 @@
 namespace Gruel.Localization {
 	public class TranslationData {
 
-		public string _translation { get; private set; }
-
+#region Property
+		public string Translation { get; }
+#endregion Property
+		
+#region Constructor
 		public TranslationData(string translation) {
-			this._translation = translation;
+			Translation = translation;
 		}
+#endregion Constructor
 	
 	}
 }

@@ -5,8 +5,20 @@ namespace Gruel.Localization {
 	[Serializable]
 	public class SystemLanguageTranslationPair {
 
-		public SystemLanguage _systemLanguage;
-		public TextAsset _translationFile;
+#region Properties
+		public SystemLanguage SystemLanguage {
+			get => _systemLanguage;
+		}
+
+		public TextAsset TranslationFile {
+			get => _translationFile;
+		}
+#endregion Properties
+
+#region Fields
+		[SerializeField] private SystemLanguage _systemLanguage;
+		[SerializeField] private TextAsset _translationFile;
+#endregion Fields
 
 	}
 }

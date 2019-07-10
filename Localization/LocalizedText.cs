@@ -67,9 +67,9 @@ namespace Gruel.Localization {
 			// Replace target keys with replacement keys.
 			for (int i = 0, n = _keyReplacements.Length; i < n; i++) {
 				var pair = _keyReplacements[i];
-				var replacementTranslation = LocalizationController.GetTranslation(pair._replacementKey);
+				var replacementTranslation = LocalizationController.GetTranslation(pair.ReplacementKey);
 				text = text.Replace(
-					"{" + pair._targetKey + "}", 
+					"{" + pair.TargetKey + "}", 
 					replacementTranslation
 				);
 			}

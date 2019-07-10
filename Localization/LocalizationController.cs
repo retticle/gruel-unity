@@ -57,11 +57,11 @@ namespace Gruel.Localization {
 		}
 		
 		public static string GetTranslation(string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(Instance._language, key))._translation;
+			return Instance._config.GetTranslationData(Tuple.Create(Instance._language, key)).Translation;
 		}
 		
 		public static string GetTranslation(SystemLanguage locale, string key) {
-			return Instance._config.GetTranslationData(Tuple.Create(locale, key))._translation;
+			return Instance._config.GetTranslationData(Tuple.Create(locale, key)).Translation;
 		}
 #endregion Public Methods
 		
