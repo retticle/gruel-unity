@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Gruel.Audio {
-	[CreateAssetMenu(menuName = "ScriptableObjects/SFXData")]
+	[CreateAssetMenu(menuName = "Gruel/SFXData")]
 	public class SfxData : ScriptableObject {
 
 #region Properties

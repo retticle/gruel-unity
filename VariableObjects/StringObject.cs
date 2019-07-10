@@ -4,19 +4,10 @@ using UnityEngine;
 namespace Gruel.VariableObjects {
 	[Serializable]
 	public class StringReference {
-		[SerializeField] private string _value = string.Empty;
-		[SerializeField] private StringObject _stringObject;
 
-		public void AddListener(Action<string> onValueChanged) {
-			_stringObject._onValueChanged += onValueChanged;
-		}
-
-		public void RemoveListener(Action<string> onValueChanged) {
-			_stringObject._onValueChanged -= onValueChanged;
-		}
-
+#region Properties
 		public string Value {
-			get { return _stringObject == null ? _value : _stringObject.Value; }
+			get => _stringObject == null ? _value : _stringObject.Value;
 			set {
 				if (_stringObject == null) {
 					_value = value;
@@ -25,31 +16,58 @@ namespace Gruel.VariableObjects {
 				}
 			}
 		}
+#endregion Properties
 
+#region Fields
+		[SerializeField] private string _value = string.Empty;
+		[SerializeField] private StringObject _stringObject;
+#endregion Fields
+
+#region Public Methods
+		public void AddListener(Action<string> onValueChanged) {
+			_stringObject.OnValueChanged += onValueChanged;
+		}
+
+		public void RemoveListener(Action<string> onValueChanged) {
+			_stringObject.OnValueChanged -= onValueChanged;
+		}
+		
 		public static implicit operator string(StringReference reference) {
 			return reference.Value;
 		}
+#endregion Public Methods
+
+#region Private Methods
+#endregion Private Methods
+		
 	}
 
-	[CreateAssetMenu(menuName = "Variables/String")]
+	[CreateAssetMenu(menuName = "Gruel/String")]
 	public class StringObject : ScriptableObject {
-
-		public Action<string> _onValueChanged;
-
-		[SerializeField] private string _value = string.Empty;
+		
+#region Properties
+		public Action<string> OnValueChanged;
+		
 		public string Value {
-			get { return _value; }
+			get => _value;
 			set {
 				if (_value != value) {
 					_value = value;
-					_onValueChanged?.Invoke(_value);
+					OnValueChanged?.Invoke(_value);
 				}
 			}
 		}
+#endregion Properties
 
+#region Fields
+		[SerializeField] private string _value = string.Empty;
+#endregion Fields
+
+#region Public Methods
 		public static implicit operator string(StringObject stringObject) {
 			return stringObject.Value;
 		}
+#endregion Public Methods
 
 	}
 }

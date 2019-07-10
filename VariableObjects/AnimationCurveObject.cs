@@ -1,19 +1,25 @@
 using UnityEngine;
 
 namespace Gruel.VariableObjects {
-	[CreateAssetMenu(menuName = "Variables/AnimationCurve")]
+	[CreateAssetMenu(menuName = "Gruel/AnimationCurve")]
 	public class AnimationCurveObject : ScriptableObject {
 
-		[SerializeField] private AnimationCurve _value = null;
-
+#region Properties
 		public AnimationCurve Value {
-			get { return _value; }
-			set { _value = value; }
+			get => _value;
+			set => _value = value;
 		}
+#endregion Properties
 
+#region Fields
+		[SerializeField] private AnimationCurve _value;
+#endregion Fields
+
+#region Public Methods
 		public static implicit operator AnimationCurve(AnimationCurveObject animationCurveObject) {
 			return animationCurveObject.Value;
 		}
+#endregion Public Methods
 
 	}
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.Flipbook {
-	[CreateAssetMenu(menuName = "ScriptableObjects/FlipbookData")]
+	[CreateAssetMenu(menuName = "Gruel/FlipbookData")]
 	public class FlipbookData : ScriptableObject {
 
 		public bool _loop = true;

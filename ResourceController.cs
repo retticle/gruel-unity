@@ -7,9 +7,11 @@ using UnityEngine;
 namespace Gruel {
 	public static class ResourceController  {
 	
-#region Resources
+#region Fields
 		private static Dictionary<string, UnityEngine.Object> _loadedResources = new Dictionary<string, UnityEngine.Object>();
-	
+#endregion Fields
+
+#region Public Methods
 		public static Coroutine LoadResource(string resourcePath, Action onLoadedCallback = null) {
 			return LoadResource(new[] { resourcePath }, onLoadedCallback);
 		}
@@ -44,7 +46,9 @@ namespace Gruel {
 		public static void UnloadAllResources() {
 			_loadedResources = new Dictionary<string, UnityEngine.Object>();
 		}
+#endregion Public Methods
 
+#region Private Methods
 		private static IEnumerator LoadResourceCor(string[] resourcePath, Action onLoadedCallback = null) {
 			for (int i = 0, n = resourcePath.Length; i < n; i++) {
 				var resourceKey = resourcePath[i];
@@ -62,7 +66,7 @@ namespace Gruel {
 		
 			onLoadedCallback?.Invoke();
 		}
-#endregion Resources
+#endregion Private Methods
 	
 	}
 }

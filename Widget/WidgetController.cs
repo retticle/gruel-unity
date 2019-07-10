@@ -7,17 +7,22 @@ using UnityEngine;
 namespace Gruel.Widget {
 	public class WidgetController : MonoBehaviour {
 	
-#region Init
+#region Fields
+		[Header("UI")]
+		[SerializeField] private Canvas _canvas;
+		
+		[Header("Widgets")]
+		private List<Widget> _widgets = new List<Widget>();
+		
+		private const float PlaneDistance = 1.0f;
+		
+		private static WidgetController _instance;
+		
+		[SerializeField] private Transform _widgetContainer;
+#endregion Fields
+
+#region Public Methods
 		public void Init() {
-			CoreInit();
-			UIInit();
-		}
-#endregion Init
-
-#region Core
-		private static WidgetController _instance = null;
-
-		private void CoreInit() {
 			// Setup instance.
 			if (_instance != null) {
 				Debug.LogError("WidgetController: There is already an instance of WidgetController!");
@@ -25,26 +30,11 @@ namespace Gruel.Widget {
 			} else {
 				_instance = this;
 			}
-		}
-#endregion Core
-
-#region UI
-		[Header("UI")]
-		[SerializeField] private Canvas _canvas;
-
-		private const float _planeDistance = 1.0f;
-	
-		private void UIInit() {
+			
 			_canvas.worldCamera = UnityEngine.Camera.main;
-			_canvas.planeDistance = _planeDistance;
+			_canvas.planeDistance = PlaneDistance;
 		}
-#endregion UI
-
-#region Widget Controller
-		[Header("Widgets")]
-		[SerializeField] private Transform _widgetContainer;
-		private List<Widget> _widgets = new List<Widget>();
-
+		
 		public static Coroutine AddWidget(string path, Action<Widget> onWidgetAdded = null) {
 			Debug.Log($"WidgetController.AddWidget: path: {path}");
 
@@ -66,7 +56,9 @@ namespace Gruel.Widget {
 				widget.Remove();
 			}
 		}
+#endregion Public Methods
 
+#region Private Methods
 		private IEnumerator AddWidgetCor(string path, Action<Widget> onWidgetAdded = null) {
 			// Create on loaded callback.
 			UnityEngine.Object loadedWidgetObject = null;
@@ -107,7 +99,7 @@ namespace Gruel.Widget {
 				_widgets[i].transform.SetSiblingIndex(i);
 			}
 		}
-#endregion Widget Controller
+#endregion Private Methods
 
 	}
 }

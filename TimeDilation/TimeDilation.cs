@@ -5,8 +5,11 @@ using UnityEngine;
 namespace Gruel.TimeDilation {
 	public static class TimeDilation {
 	
+#region Fields
 		private static Dictionary<UnityEngine.Object, float> _affectors = new Dictionary<Object,float>();
-	
+#endregion Fields
+
+#region Public Methods
 		public static void AddAffector(UnityEngine.Object obj, float timeDilation) {
 			if (_affectors.ContainsKey(obj)) {
 				Debug.LogError($"TimeDilation.AddAffector: This affector ({obj.name}) has already been added!");
@@ -26,7 +29,9 @@ namespace Gruel.TimeDilation {
 			_affectors.Remove(obj);
 			Evaluate();
 		}
+#endregion Public Methods
 
+#region Private Methods
 		private static void Evaluate() {
 			if (_affectors.Count < 1) {
 				Debug.Log("TimeDilation.Evaluate: No more affectors in system, setting time scale to 1.0f");
@@ -42,6 +47,7 @@ namespace Gruel.TimeDilation {
 
 			Time.timeScale = timeScale;
 		}
+#endregion Private Methods
 	
 	}
 }

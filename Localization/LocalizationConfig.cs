@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Gruel.Localization {
-	[CreateAssetMenu(menuName = "ScriptableObjects/LocalizationConfig")]
+	[CreateAssetMenu(menuName = "Gruel/LocalizationConfig")]
 	public class LocalizationConfig : ScriptableObject {
 		
 #region Properties

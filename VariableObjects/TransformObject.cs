@@ -2,26 +2,32 @@ using System;
 using UnityEngine;
 
 namespace Gruel.VariableObjects {
-	[CreateAssetMenu(menuName = "Variables/Transform")]
+	[CreateAssetMenu(menuName = "Gruel/Transform")]
 	public class TransformObject : ScriptableObject {
-
-		public Action<Transform> _onValueChanged;
-
-		[SerializeField] private Transform _value = null;
-
+		
+#region Properties
+		public Action<Transform> OnValueChanged;
+		
 		public Transform Value {
-			get { return _value; }
+			get => _value;
 			set {
 				if (_value != value) {
 					_value = value;
-					_onValueChanged?.Invoke(_value);
+					OnValueChanged?.Invoke(_value);
 				}
 			}
 		}
+#endregion Properties
 
+#region Fields
+		[SerializeField] private Transform _value;
+#endregion Fields
+
+#region Public Methods
 		public static implicit operator Transform(TransformObject transformObject) {
 			return transformObject.Value;
 		}
+#endregion Public Methods
 
 	}
 }

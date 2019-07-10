@@ -2,11 +2,14 @@ using System;
 using UnityEngine;
 
 namespace Gruel.VariableObjects {
-	[CreateAssetMenu(menuName = "ScriptableObjects/EventObjectBool")]
+	[CreateAssetMenu(menuName = "Gruel/EventObjectBool")]
 	public class EventObjectBool : ScriptableObject {
 
+#region Fields
 		private Action<bool> _action;
+#endregion Fields
 
+#region Public Methods
 		public void AddListener(Action<bool> action) {
 			_action += action;
 		}
@@ -18,6 +21,7 @@ namespace Gruel.VariableObjects {
 		public void Invoke(bool value) {
 			_action?.Invoke(value);
 		}
+#endregion Public Methods
 	
 	}
 }

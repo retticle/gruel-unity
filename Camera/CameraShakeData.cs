@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.Camera {
-	[CreateAssetMenu(menuName = "ScriptableObjects/CameraShakeData")]
+	[CreateAssetMenu(menuName = "Gruel/CameraShakeData")]
 	public class CameraShakeData : ScriptableObject {
 
 #region Properties

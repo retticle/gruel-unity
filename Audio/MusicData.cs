@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Gruel.Audio {
-	[CreateAssetMenu(menuName = "ScriptableObjects/MusicData")]
+	[CreateAssetMenu(menuName = "Gruel/MusicData")]
 	public class MusicData : ScriptableObject {
 
 #region Properties

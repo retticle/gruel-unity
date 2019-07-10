@@ -5,28 +5,33 @@ using UnityEngine;
 namespace Gruel.Widget {
 	public abstract class Widget : MonoBehaviour {
 	
-#region Widget
-		[Header("Widget Base")]
-		// ReSharper disable once InvalidXmlDocComment
+#region Properties
+		/// <summary>
+		/// Whether the widget is active or not.
+		/// </summary>
+		public bool Active {
+			get => _active;
+			protected set => _active = value;
+		}
+		
 		/// <summary>
 		/// Priority used to determine which Widget is rendered ontop of others.
 		/// 0 is the highest priority.
 		/// </summary>
-		[SerializeField] protected int _orderPriority = 1;
 		public virtual int OrderPriority {
-			get { return _orderPriority; }
-			protected set { _orderPriority = value; }
+			get => _orderPriority;
+			protected set => _orderPriority = value;
 		}
-	
-		/// <summary>
-		/// Whether the widget is active or not.
-		/// </summary>
-		protected bool _active = false;
-		public bool Active {
-			get { return _active; }
-			protected set { _active = value; }
-		}
-	
+#endregion Properties
+
+#region Fields
+		[Header("Widget Base")]
+		[SerializeField] protected int _orderPriority = 1;
+		
+		protected bool _active;
+#endregion Fields
+
+#region Public Methods
 		/// <summary>
 		/// Async initialize the widget.
 		/// </summary>
@@ -34,14 +39,7 @@ namespace Gruel.Widget {
 		public Coroutine Init() {
 			return CoroutineRunner.StartCoroutine(InitCor());
 		}
-
-		protected abstract IEnumerator InitCor();
-
-		/// <summary>
-		/// Destroys the widget.
-		/// </summary>
-		public abstract void Remove();
-
+		
 		/// <summary>
 		/// Set the widget to be active or inactive.
 		/// </summary>
@@ -50,9 +48,17 @@ namespace Gruel.Widget {
 		public Coroutine SetActive(bool active) {
 			return CoroutineRunner.StartCoroutine(SetActiveCor(active));
 		}
+		
+		/// <summary>
+		/// Destroys the widget.
+		/// </summary>
+		public abstract void Remove();
+#endregion Public Methods
 
+#region Private Methods
+		protected abstract IEnumerator InitCor();
 		protected abstract IEnumerator SetActiveCor(bool active);
-#endregion Widget
+#endregion Private Methods
 
 	}
 }
