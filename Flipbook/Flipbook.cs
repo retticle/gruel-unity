@@ -11,8 +11,28 @@ namespace Gruel.Flipbook {
 #region Properties
 		public bool Playing { get; private set; }
 		public Action OnFinishedPlaying;
+
+		public bool PlayOnStart {
+			get => _playOnStart;
+			set => _playOnStart = value;
+		}
+
+		public bool StartAtRandomPlaybackPosition {
+			get => _startAtRandomPlaybackPosition;
+			set => _startAtRandomPlaybackPosition = value;
+		}
+
+		public float Delay {
+			get => _delay;
+			set => _delay = value;
+		}
+
+		public bool ClearLastFrame {
+			get => _clearLastFrame;
+			set => _clearLastFrame = value;
+		}
 		
-		public Color _tint {
+		public Color Tint {
 			get {
 				if (_spriteRenderer != null) {
 					return _spriteRenderer.color;
@@ -43,9 +63,9 @@ namespace Gruel.Flipbook {
 		[Header("Flipbook")]
 		[SerializeField] private FlipbookData _flipbookData;
 		[SerializeField] private bool _playOnStart = true;
-		public bool _startAtRandomPlaybackPosition;
-		public float _delay;
-		public bool _clearLastFrame;
+		[SerializeField] private bool _startAtRandomPlaybackPosition;
+		[SerializeField] private float _delay;
+		[SerializeField] private bool _clearLastFrame;
 
 		[Header("Renderer")]
 		[SerializeField] private SpriteRenderer _spriteRenderer;
