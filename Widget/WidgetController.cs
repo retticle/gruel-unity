@@ -12,13 +12,16 @@ namespace Gruel.Widget {
 		[SerializeField] private Canvas _canvas;
 		
 		[Header("Widgets")]
-		private List<Widget> _widgets = new List<Widget>();
+		[SerializeField] private Transform _widgetContainer;
+
+		[SerializeField] private bool _adjustZPositionByPriority;
+		[SerializeField] private float _zPositionOffset = 0.1f;
 		
 		private const float PlaneDistance = 1.0f;
 		
 		private static WidgetController _instance;
+		private List<Widget> _widgets = new List<Widget>();
 		
-		[SerializeField] private Transform _widgetContainer;
 #endregion Fields
 
 #region Public Methods
@@ -96,7 +99,15 @@ namespace Gruel.Widget {
 		
 			// Adjust widget position in hierarchy to match list order.
 			for (int i = 0, n = _widgets.Count; i < n; i++) {
-				_widgets[i].transform.SetSiblingIndex(i);
+				var widgetTransform = _widgets[i].transform;
+				
+				widgetTransform.transform.SetSiblingIndex(i);
+
+				if (_adjustZPositionByPriority) {
+					var position = widgetTransform.localPosition;
+					position.z = i * -_zPositionOffset;
+					widgetTransform.localPosition = position;
+				}
 			}
 		}
 #endregion Private Methods
