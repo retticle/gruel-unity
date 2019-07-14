@@ -50,6 +50,7 @@ namespace Gruel.Audio {
 		
 		[Header("SFX")]
 		[SerializeField] private AudioMixerGroup _sfxAudioMixerGroup;
+		[SerializeField] private int _maxSfxSources = 16;
 		
 		[Header("Music")]
 		[SerializeField] private AudioMixerGroup _musicAudioMixerGroup;
@@ -62,7 +63,6 @@ namespace Gruel.Audio {
 		private static ManagedCoroutine[] _sfxRoutines;
 		private static Queue<int> _sfxAudioSourceQueue = new Queue<int>();
 		private static List<int> _sfxAudioSourceActive = new List<int>();
-		private int _maxSfxSources = 16;
 
 		private bool _musicEnabled;
 		private static AudioSource _musicAudioSource;
