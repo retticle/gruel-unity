@@ -1,5 +1,5 @@
-﻿namespace HUDConsole {
+﻿namespace Gruel.Console {
 	
-public delegate void CommandHandler(string[] args);
+	public delegate void CommandHandler(string[] args);
 	
 }
