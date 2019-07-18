@@ -23,9 +23,7 @@ namespace Gruel.Console {
 #region Fields
 		[Header("Console Config")]
 		[SerializeField] private ConsoleConfig _config;
-		
-		private static Console _instance;
-		
+
 		/// <summary>
 		/// Tests whether a string is a drive root. e.g. "D:\"
 		/// </summary>
@@ -50,6 +48,8 @@ namespace Gruel.Console {
 		/// Tests whether a string starts and ends with either double or single quotes (not a mix).
 		/// </summary>
 		private static readonly Regex IsWrappedInQuotes = new Regex(RegexQuoteWrapped);
+		
+		private static Console _instance;
 		
 		private ConsoleView _consoleView;
 		private string _helpTextFormat = "{0} : {1}";
