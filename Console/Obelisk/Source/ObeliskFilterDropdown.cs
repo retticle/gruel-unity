@@ -5,6 +5,16 @@ using UnityEngine.UI;
 
 namespace Gruel.Console.Obelisk {
 	public class ObeliskFilterDropdown : MonoBehaviour {
+		
+#region Properties
+		public ObeliskColorSet ColorSet {
+			get => _colorSet;
+			set {
+				_colorSet = value;
+				ColorSetChanged();
+			}
+		}
+#endregion Properties
 
 #region Fields
 		[Header("Dropdown")]
@@ -46,6 +56,7 @@ namespace Gruel.Console.Obelisk {
 		[SerializeField] private Image _exceptionToggleIconBackgroundImage;
 
 		private bool _dropdownActive;
+		private ObeliskColorSet _colorSet;
 
 		private Dictionary<LogType, bool> _filterSettings = new Dictionary<LogType, bool> {
 			{ LogType.Error, false },
@@ -91,31 +102,8 @@ namespace Gruel.Console.Obelisk {
 
 			// Exception.
 			_exceptionToggle.onValueChanged.AddListener(delegate { ExceptionToggleHandler(_exceptionToggle); });
-			
-			_dropdownSymbolBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-			_dropdownSymbolImage.color = ObeliskConsole.ColorSet.IconColor;
-			_dropdownButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_dropdownArrowImage.color = ObeliskConsole.ColorSet.IconColor;
-
-			_errorToggleIconBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-			_assertToggleIconBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-			_warningToggleIconBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-			_logToggleIconIconBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-			_exceptionToggleIconBackgroundImage.color = ObeliskConsole.ColorSet.IconBackgroundColor;
-
-			_errorToggleButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_assertToggleButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_warningToggleButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_logToggleButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_exceptionToggleButtonImage.color = ObeliskConsole.ColorSet.ButtonColor;
-
-			_errorToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
-			_assertToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
-			_warningToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
-			_logToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
-			_exceptionToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
 		}
-
+		
 		private void DropdownButtonHandler(Button target) {
 			ToggleState();
 		}
@@ -140,9 +128,9 @@ namespace Gruel.Console.Obelisk {
 			}
 
 			if (target.isOn) {
-				_errorToggleIconImage.color = ObeliskConsole.ColorSet.IconDisabledColor;
+				_errorToggleIconImage.color = _colorSet.IconDisabledColor;
 			} else {
-				_errorToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
+				_errorToggleIconImage.color = _colorSet.IconColor;
 			}
 		}
 
@@ -154,9 +142,9 @@ namespace Gruel.Console.Obelisk {
 			}
 
 			if (target.isOn) {
-				_assertToggleIconImage.color = ObeliskConsole.ColorSet.IconDisabledColor;
+				_assertToggleIconImage.color = _colorSet.IconDisabledColor;
 			} else {
-				_assertToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
+				_assertToggleIconImage.color = _colorSet.IconColor;
 			}
 		}
 
@@ -168,9 +156,9 @@ namespace Gruel.Console.Obelisk {
 			}
 
 			if (target.isOn) {
-				_warningToggleIconImage.color = ObeliskConsole.ColorSet.IconDisabledColor;
+				_warningToggleIconImage.color = _colorSet.IconDisabledColor;
 			} else {
-				_warningToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
+				_warningToggleIconImage.color = _colorSet.IconColor;
 			}
 		}
 
@@ -182,9 +170,9 @@ namespace Gruel.Console.Obelisk {
 			}
 
 			if (target.isOn) {
-				_logToggleIconImage.color = ObeliskConsole.ColorSet.IconDisabledColor;
+				_logToggleIconImage.color = _colorSet.IconDisabledColor;
 			} else {
-				_logToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
+				_logToggleIconImage.color = _colorSet.IconColor;
 			}
 		}
 
@@ -196,10 +184,35 @@ namespace Gruel.Console.Obelisk {
 			}
 
 			if (target.isOn) {
-				_exceptionToggleIconImage.color = ObeliskConsole.ColorSet.IconDisabledColor;
+				_exceptionToggleIconImage.color = _colorSet.IconDisabledColor;
 			} else {
-				_exceptionToggleIconImage.color = ObeliskConsole.ColorSet.IconColor;
+				_exceptionToggleIconImage.color = _colorSet.IconColor;
 			}
+		}
+
+		private void ColorSetChanged() {
+			_dropdownSymbolBackgroundImage.color = _colorSet.IconBackgroundColor;
+			_dropdownSymbolImage.color = _colorSet.IconColor;
+			_dropdownButtonImage.color = _colorSet.ButtonColor;
+			_dropdownArrowImage.color = _colorSet.IconColor;
+
+			_errorToggleIconBackgroundImage.color = _colorSet.IconBackgroundColor;
+			_assertToggleIconBackgroundImage.color = _colorSet.IconBackgroundColor;
+			_warningToggleIconBackgroundImage.color = _colorSet.IconBackgroundColor;
+			_logToggleIconIconBackgroundImage.color = _colorSet.IconBackgroundColor;
+			_exceptionToggleIconBackgroundImage.color = _colorSet.IconBackgroundColor;
+
+			_errorToggleButtonImage.color = _colorSet.ButtonColor;
+			_assertToggleButtonImage.color = _colorSet.ButtonColor;
+			_warningToggleButtonImage.color = _colorSet.ButtonColor;
+			_logToggleButtonImage.color = _colorSet.ButtonColor;
+			_exceptionToggleButtonImage.color = _colorSet.ButtonColor;
+
+			_errorToggleIconImage.color = _colorSet.IconColor;
+			_assertToggleIconImage.color = _colorSet.IconColor;
+			_warningToggleIconImage.color = _colorSet.IconColor;
+			_logToggleIconImage.color = _colorSet.IconColor;
+			_exceptionToggleIconImage.color = _colorSet.IconColor;
 		}
 #endregion Private Methods
 		

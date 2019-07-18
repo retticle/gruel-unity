@@ -6,7 +6,6 @@ namespace Gruel.Console.Obelisk {
 		
 #region Properties
 		public ConsoleLog ConsoleLog { get; private set; }
-
 		public float Height => _rectTransform.sizeDelta.y;
 #endregion Properties
 
@@ -21,11 +20,16 @@ namespace Gruel.Console.Obelisk {
 		private const float HeightIncrement = 20.0f;
 
 		private ObeliskConsole _obeliskConsole;
+		private ObeliskColorSet _colorSet;
 #endregion Fields
 
 #region Public Methods
-		public void Init(ObeliskConsole obeliskConsole) {
+		public void Init(ObeliskConsole obeliskConsole, ObeliskColorSet colorSet) {
 			_obeliskConsole = obeliskConsole;
+			_colorSet = colorSet;
+			
+			_stackTraceImage.color = _colorSet.IconColor;
+			_button.onClick.AddListener(OnButtonClicked);
 		}
 		
 		public void SetLog(ref ConsoleLog log) {
@@ -46,11 +50,6 @@ namespace Gruel.Console.Obelisk {
 #endregion Public Methods
 
 #region Private Methods
-		private void Awake() {
-			_stackTraceImage.color = ObeliskConsole.ColorSet.IconColor;
-			_button.onClick.AddListener(OnButtonClicked);
-		}
-		
 		private void OnButtonClicked() {
 			if (ConsoleLog.StackTrace == "") {
 				return;
@@ -67,22 +66,20 @@ namespace Gruel.Console.Obelisk {
 		}
 
 		private void SetColors(LogType logType) {
-			var backgroundColor = ObeliskConsole.ColorSet.LogBackgroundColor(logType);
+			var backgroundColor = _colorSet.LogBackgroundColor(logType);
 
 			if ((transform.parent.childCount % 2) == 0) {
 				backgroundColor += new Color(0.015f, 0.015f, 0.015f, 1.0f);
 			}
 
 			_background.color = backgroundColor;
-			_text.color = ObeliskConsole.ColorSet.LogTextColor(logType);
+			_text.color = _colorSet.LogTextColor(logType);
 		}
 
 		private void SetColors(Color textColor, Color backgroundColor) {
 			_background.color = backgroundColor;
 			_text.color = textColor;
 		}
-
-
 #endregion Private Methods
 		
 	}

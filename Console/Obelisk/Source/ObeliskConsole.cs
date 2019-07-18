@@ -11,7 +11,6 @@ namespace Gruel.Console.Obelisk {
 
 #region Properties
 		public override bool IsActive { get; protected set; }
-		public static ObeliskColorSet ColorSet { get; private set; }
 #endregion Properties
 
 #region Fields
@@ -68,14 +67,14 @@ namespace Gruel.Console.Obelisk {
 		
 		[Header("Obelisk Color Set")]
 		[Tooltip("Color set objects.\nMust be in same order as DefaultViewColorSetName enum.")]
-		[SerializeField] private ObeliskColorSet _colorSet;
+		[SerializeField] private ObeliskColorSet _colorSetAsset;
 		
 //		private static ObeliskConsole _instance;
 
 		private List<ObeliskLog> _logViewHistory = new List<ObeliskLog>();
-		
 		private Queue<ObeliskLog> _obeliskLogPool = new Queue<ObeliskLog>();
 		private ObeliskStackTrace _obeliskStackTrace;
+		private ObeliskColorSet _instantiatedColorSet;
 		
 		private int _commandHistoryDelta;
 #endregion Fields
@@ -102,7 +101,7 @@ namespace Gruel.Console.Obelisk {
 		protected override void Awake() {
 			base.Awake();
 
-			ColorSet = Instantiate(_colorSet);
+			_instantiatedColorSet = Instantiate(_colorSetAsset);
 
 			// Main.
 			_containerListener.AddDimensionsChangedListener(OnContainerRectTransformDimensionsChange);
@@ -112,17 +111,20 @@ namespace Gruel.Console.Obelisk {
 
 			// Filter.
 			_filterDropdown.AddFilterChangedListener(FilterUpdated);
+			_filterDropdown.ColorSet = _instantiatedColorSet;
 
 			// Search.
 			_searchInputField.onValueChanged.AddListener(delegate { SearchInputFieldUpdated(_searchInputField); });
 			
+			// Fill log pool.
 			FillPool();
+			
+			// Apply color set to main window.
 			ApplyColorSet();
-		}
-
-		private void Start() {
-			_obeliskStackTrace = Instantiate(_obeliskStackTracePrefab);
-			_obeliskStackTrace.transform.SetParent(transform.parent, false);
+			
+			// StackTrace window.
+			_obeliskStackTrace = Instantiate(_obeliskStackTracePrefab, transform.parent, false);
+			_obeliskStackTrace.ColorSet = _instantiatedColorSet;
 		}
 
 		private void Update() {
@@ -161,41 +163,41 @@ namespace Gruel.Console.Obelisk {
 		
 		private void ApplyColorSet() {
 			// Main.
-			_containerBackgroundImage.color = ColorSet.BackgroundColor;
-			_outline.effectColor = ColorSet.OutlineColor;
-			_resizeHandleImage.color = ColorSet.ButtonColor;
+			_containerBackgroundImage.color = _instantiatedColorSet.BackgroundColor;
+			_outline.effectColor = _instantiatedColorSet.OutlineColor;
+			_resizeHandleImage.color = _instantiatedColorSet.ButtonColor;
 
 			// Titlebar.
-			_titlebarBackgroundImage.color = ColorSet.TitlebarBackgroundColor;
-			_titlebarIconImage.color = ColorSet.IconColor;
-			_titlebarTitleText.color = ColorSet.TitlebarTextColor;
-			_closeButtonBackgroundImage.color = ColorSet.ButtonColor;
-			_closeButtonIconImage.color = ColorSet.IconColor;
+			_titlebarBackgroundImage.color = _instantiatedColorSet.TitlebarBackgroundColor;
+			_titlebarIconImage.color = _instantiatedColorSet.IconColor;
+			_titlebarTitleText.color = _instantiatedColorSet.TitlebarTextColor;
+			_closeButtonBackgroundImage.color = _instantiatedColorSet.ButtonColor;
+			_closeButtonIconImage.color = _instantiatedColorSet.IconColor;
 
 			// Scrollbar.
-			_scrollbarBackgroundImage.color = ColorSet.ScrollbarBackgroundColor;
+			_scrollbarBackgroundImage.color = _instantiatedColorSet.ScrollbarBackgroundColor;
 
 			var scrollbarColorBlock = new ColorBlock();
-			scrollbarColorBlock.normalColor = ColorSet.ScrollbarSliderColor;
-			scrollbarColorBlock.highlightedColor = ColorSet.ScrollbarSliderHighlightedColor;
-			scrollbarColorBlock.pressedColor = ColorSet.ScrollbarSliderPressedColor;
+			scrollbarColorBlock.normalColor = _instantiatedColorSet.ScrollbarSliderColor;
+			scrollbarColorBlock.highlightedColor = _instantiatedColorSet.ScrollbarSliderHighlightedColor;
+			scrollbarColorBlock.pressedColor = _instantiatedColorSet.ScrollbarSliderPressedColor;
 			scrollbarColorBlock.colorMultiplier = 1.0f;
 			_scrollbar.colors = scrollbarColorBlock;
 
 			// Input
-			_inputContainerBackgroundImage.color = ColorSet.InputContainerBackgroundColor;
+			_inputContainerBackgroundImage.color = _instantiatedColorSet.InputContainerBackgroundColor;
 
 			// Command.
-			_commandSymbolBackgroundImage.color = ColorSet.IconBackgroundColor;
-			_commandSymbolImage.color = ColorSet.IconColor;
-			_commandInputFieldImage.color = ColorSet.ButtonColor;
-			_commandInputFieldText.color = ColorSet.InputTextColor;
+			_commandSymbolBackgroundImage.color = _instantiatedColorSet.IconBackgroundColor;
+			_commandSymbolImage.color = _instantiatedColorSet.IconColor;
+			_commandInputFieldImage.color = _instantiatedColorSet.ButtonColor;
+			_commandInputFieldText.color = _instantiatedColorSet.InputTextColor;
 
 			// Search.
-			_searchSymbolBackgroundImage.color = ColorSet.IconBackgroundColor;
-			_searchSymbolImage.color = ColorSet.IconColor;
-			_searchInputFieldImage.color = ColorSet.ButtonColor;
-			_searchInputFieldText.color = ColorSet.InputTextColor;
+			_searchSymbolBackgroundImage.color = _instantiatedColorSet.IconBackgroundColor;
+			_searchSymbolImage.color = _instantiatedColorSet.IconColor;
+			_searchInputFieldImage.color = _instantiatedColorSet.ButtonColor;
+			_searchInputFieldText.color = _instantiatedColorSet.InputTextColor;
 		}
 		
 		private void ToggleState() {
@@ -247,7 +249,7 @@ namespace Gruel.Console.Obelisk {
 		private void FillPool() {
 			for (var i = 0; i < _logViewHistoryMax + 1; i++) {
 				var log = Instantiate(_obeliskLogPrefab, _obeliskLogPoolContainer, false);
-				log.Init(this);
+				log.Init(this, _instantiatedColorSet);
 				_obeliskLogPool.Enqueue(log);
 			}
 		}
@@ -258,10 +260,10 @@ namespace Gruel.Console.Obelisk {
 		}
 
 		private void ResizeLogLayout() {
-			Vector2 logLayoutSizeCache = _logLayout.sizeDelta;
-			Vector3 logLayoutPosCache = _logLayout.localPosition;
-			float minHeight = _container.sizeDelta.y - 40.0f;
-			float newHeight = 0.0f;
+			var logLayoutSizeCache = _logLayout.sizeDelta;
+			var logLayoutPosCache = _logLayout.localPosition;
+			var minHeight = _container.sizeDelta.y - 40.0f;
+			var newHeight = 0.0f;
 
 			// Resize LogLayout so it can properly contain all the logs.
 			for (int i = 0, n = _logViewHistory.Count; i < n; i++) {
@@ -271,7 +273,7 @@ namespace Gruel.Console.Obelisk {
 			_logLayout.sizeDelta = new Vector2(_logLayout.sizeDelta.x, Mathf.Clamp(newHeight, minHeight, 4096.0f));
 
 			// Offset LogLayout relative to the size it just increased by.
-			float newPosY = 0.0f;
+			float newPosY;
 			float sizeDifferenceY = _logLayout.sizeDelta.y - logLayoutSizeCache.y;
 			newPosY = logLayoutPosCache.y + (sizeDifferenceY * 0.5f);
 			_logLayout.localPosition = new Vector3(logLayoutPosCache.x, newPosY, 0.0f);

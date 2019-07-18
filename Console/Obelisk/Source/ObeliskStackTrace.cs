@@ -4,6 +4,16 @@ using UnityEngine.UI;
 namespace Gruel.Console.Obelisk {
 	public class ObeliskStackTrace : MonoBehaviour {
 		
+#region Properties
+		public ObeliskColorSet ColorSet {
+			get => _colorSet;
+			set {
+				_colorSet = value;
+				ColorSetChanged();
+			}
+		}	
+#endregion Properties
+		
 #region Fields
 		[Header("Main")]
 		[SerializeField] private GameObject _container;
@@ -27,6 +37,8 @@ namespace Gruel.Console.Obelisk {
 
 		[Header("Content")]
 		[SerializeField] private Text _stackTraceText;
+
+		private ObeliskColorSet _colorSet;
 #endregion Fields
 
 #region Public Methods
@@ -39,7 +51,6 @@ namespace Gruel.Console.Obelisk {
 
 #region Private Methods
 		private void Awake() {
-			ApplyColorSet();
 			_closeButton.onClick.AddListener(OnCloseButtonClicked);
 		}
 		
@@ -51,32 +62,32 @@ namespace Gruel.Console.Obelisk {
 			SetEnabled(false);
 		}
 		
-		private void ApplyColorSet() {
+		private void ColorSetChanged() {
 			// Main.
-			_containerBackgroundImage.color = ObeliskConsole.ColorSet.BackgroundColor;
-			_outline.effectColor = ObeliskConsole.ColorSet.OutlineColor;
-			_resizeHandleBackgroundImage.color = ObeliskConsole.ColorSet.InputContainerBackgroundColor;
-			_resizeHandleImage.color = ObeliskConsole.ColorSet.ButtonColor;
+			_containerBackgroundImage.color = _colorSet.BackgroundColor;
+			_outline.effectColor = _colorSet.OutlineColor;
+			_resizeHandleBackgroundImage.color = _colorSet.InputContainerBackgroundColor;
+			_resizeHandleImage.color = _colorSet.ButtonColor;
 
 			// Titlebar.
-			_titlebarBackgroundImage.color = ObeliskConsole.ColorSet.TitlebarBackgroundColor;
-			_titlebarIconImage.color = ObeliskConsole.ColorSet.IconColor;
-			_titlebarTitleText.color = ObeliskConsole.ColorSet.TitlebarTextColor;
-			_closeButtonBackgroundImage.color = ObeliskConsole.ColorSet.ButtonColor;
-			_closeButtonIconImage.color = ObeliskConsole.ColorSet.IconColor;
+			_titlebarBackgroundImage.color = _colorSet.TitlebarBackgroundColor;
+			_titlebarIconImage.color = _colorSet.IconColor;
+			_titlebarTitleText.color = _colorSet.TitlebarTextColor;
+			_closeButtonBackgroundImage.color = _colorSet.ButtonColor;
+			_closeButtonIconImage.color = _colorSet.IconColor;
 
 			// Scrollbar.
-			_scrollbarBackgroundImage.color = ObeliskConsole.ColorSet.ScrollbarBackgroundColor;
+			_scrollbarBackgroundImage.color = _colorSet.ScrollbarBackgroundColor;
 
 			var scrollbarColorBlock = new ColorBlock();
-			scrollbarColorBlock.normalColor = ObeliskConsole.ColorSet.ScrollbarSliderColor;
-			scrollbarColorBlock.highlightedColor = ObeliskConsole.ColorSet.ScrollbarSliderHighlightedColor;
-			scrollbarColorBlock.pressedColor = ObeliskConsole.ColorSet.ScrollbarSliderPressedColor;
+			scrollbarColorBlock.normalColor = _colorSet.ScrollbarSliderColor;
+			scrollbarColorBlock.highlightedColor = _colorSet.ScrollbarSliderHighlightedColor;
+			scrollbarColorBlock.pressedColor = _colorSet.ScrollbarSliderPressedColor;
 			scrollbarColorBlock.colorMultiplier = 1.0f;
 			_scrollbar.colors = scrollbarColorBlock;
 
 			// Content.
-			_stackTraceText.color = ObeliskConsole.ColorSet.StackTraceTextColor;
+			_stackTraceText.color = _colorSet.StackTraceTextColor;
 		}
 #endregion Private Methods
 		
