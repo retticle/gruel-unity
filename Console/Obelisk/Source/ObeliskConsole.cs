@@ -265,7 +265,7 @@ namespace Gruel.Console.Obelisk {
 
 			// Resize LogLayout so it can properly contain all the logs.
 			for (int i = 0, n = _logViewHistory.Count; i < n; i++) {
-				newHeight += _logViewHistory[i].RectTransform.sizeDelta.y;
+				newHeight += _logViewHistory[i].Height;
 			}
 
 			_logLayout.sizeDelta = new Vector2(_logLayout.sizeDelta.x, Mathf.Clamp(newHeight, minHeight, 4096.0f));

@@ -7,7 +7,7 @@ namespace Gruel.Console.Obelisk {
 #region Properties
 		public ConsoleLog ConsoleLog { get; private set; }
 
-		public RectTransform RectTransform => _rectTransform;
+		public float Height => _rectTransform.sizeDelta.y;
 #endregion Properties
 
 #region Fields
@@ -63,7 +63,7 @@ namespace Gruel.Console.Obelisk {
 			var heightMultiple = Mathf.Ceil(_text.preferredHeight / HeightIncrement);
 			var newHeight = heightMultiple * HeightIncrement;
 
-			RectTransform.sizeDelta = new Vector2(RectTransform.sizeDelta.x, newHeight);
+			_rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, newHeight);
 		}
 
 		private void SetColors(LogType logType) {
