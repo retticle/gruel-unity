@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gruel.Console {
-	[CreateAssetMenu(menuName = "HUDConsole/Console History Asset", fileName = "ConsoleHistory")]
+	[CreateAssetMenu(menuName = "Gruel/Console/Console History Asset", fileName = "ConsoleHistory")]
 	public class ConsoleHistory : ScriptableObject {
 		
 #region Properties

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 namespace Gruel.VariableObjects {
-	[CreateAssetMenu(menuName = "Gruel/EventObjectBool")]
+	[CreateAssetMenu(menuName = "Gruel/Events/EventObjectBool")]
 	public class EventObjectBool : ScriptableObject {
 
 #region Fields

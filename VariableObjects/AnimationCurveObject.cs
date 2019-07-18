@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.VariableObjects {
-	[CreateAssetMenu(menuName = "Gruel/AnimationCurve")]
+	[CreateAssetMenu(menuName = "Gruel/Variables/AnimationCurve")]
 	public class AnimationCurveObject : ScriptableObject {
 
 #region Properties

@@ -42,7 +42,7 @@ namespace Gruel.VariableObjects {
 		
 	}
 
-	[CreateAssetMenu(menuName = "Gruel/String")]
+	[CreateAssetMenu(menuName = "Gruel/Variables/String")]
 	public class StringObject : ScriptableObject {
 		
 #region Properties

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.Console {
-	[CreateAssetMenu(menuName = "HUDConsole/Console Config Asset", fileName = "ConsoleConfig")]
+	[CreateAssetMenu(menuName = "Gruel/Console/Console Config Asset", fileName = "ConsoleConfig")]
 	public class ConsoleConfig : ScriptableObject {
 		
 #region Properties

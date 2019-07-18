@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Gruel.Console.Obelisk {
-	[CreateAssetMenu(menuName = "HUDConsole/Obelisk ColorSet Asset", fileName = "ObeliskColorSet_")]
+	[CreateAssetMenu(menuName = "Gruel/Console/Obelisk ColorSet Asset", fileName = "ObeliskColorSet_")]
 	public class ObeliskColorSet : ScriptableObject {
 		
 #region Properties

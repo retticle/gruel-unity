@@ -39,7 +39,7 @@ namespace Gruel.VariableObjects {
 
 	}
 
-	[CreateAssetMenu(menuName = "Gruel/Int")]
+	[CreateAssetMenu(menuName = "Gruel/Variables/Int")]
 	public class IntObject : ScriptableObject {
 
 #region Properties
