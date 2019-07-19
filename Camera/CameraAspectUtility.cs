@@ -50,7 +50,7 @@ namespace Gruel.Camera {
 #endregion Public Methods
 	
 #region Private Methods
-		protected override void Start() {
+		private void Start() {
 			SetAspectRatio();
 		}
 		

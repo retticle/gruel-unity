@@ -24,8 +24,7 @@ namespace Gruel.Camera {
 #endregion Fields
 
 #region Private Methods
-		protected override void Start() {
-			base.Start();
+		private void Start() {
 			
 			SetOrtho();
 		}
