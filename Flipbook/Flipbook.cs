@@ -3,25 +3,24 @@ using System.Collections;
 using Gruel.CoroutineSystem;
 using Gruel.ObjectPool;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Gruel.Flipbook {
-	public class Flipbook : MonoBehaviour, IPoolable {
-		
+	public abstract class Flipbook : MonoBehaviour, IPoolable {
+
 #region Properties
 		public bool Playing { get; private set; }
 		public Action OnFinishedPlaying;
-
+		
 		public bool PlayOnStart {
 			get => _playOnStart;
 			set => _playOnStart = value;
 		}
-
+		
 		public bool StartAtRandomPlaybackPosition {
 			get => _startAtRandomPlaybackPosition;
 			set => _startAtRandomPlaybackPosition = value;
 		}
-
+		
 		public float Delay {
 			get => _delay;
 			set => _delay = value;
@@ -31,84 +30,52 @@ namespace Gruel.Flipbook {
 			get => _clearLastFrame;
 			set => _clearLastFrame = value;
 		}
-		
-		public Color Tint {
-			get {
-				if (_spriteRenderer != null) {
-					return _spriteRenderer.color;
-				}
 
-				if (_image != null) {
-					return _image.color;
-				}
-
-				throw new System.InvalidOperationException("Flipbook doesn't have a renderer set!");
-			}
-
+		private int Frame {
+			get => _frame;
 			set {
-				if (_spriteRenderer != null) {
-					_spriteRenderer.color = value;
-					return;
-				}
-
-				if (_image != null) {
-					_image.color = value;
-					return;
-				}
+				_frame = value;
+				FrameChanged();
 			}
 		}
 #endregion Properties
-
-#region Fields
-		[Header("Flipbook")]
-		[SerializeField] private FlipbookData _flipbookData;
-		[SerializeField] private bool _playOnStart = true;
-		[SerializeField] private bool _startAtRandomPlaybackPosition;
-		[SerializeField] private float _delay;
-		[SerializeField] private bool _clearLastFrame;
-
-		[Header("Renderer")]
-		[SerializeField] private SpriteRenderer _spriteRenderer;
-		[SerializeField] private Image _image;
-
-		[Header("Poolable")]
-		[SerializeField] private bool _poolWhenFinished;
-
-		private ManagedCoroutine _flipbookCor;
 		
-		private bool _loop = true;
-		private int _numberOfFrames;
-		private float _frameDelay;
-		private float _duration;
+#region Fields
+		[Header("Playback Settings")]
+		[SerializeField] protected bool _playOnStart = true;
+		[SerializeField] protected bool _startAtRandomPlaybackPosition;
+		[SerializeField] protected float _delay;
+		[SerializeField] protected bool _clearLastFrame;
+		
+		[Header("Pool Settings")]
+		[SerializeField] protected bool _poolWhenFinished;
+		[SerializeField] protected bool _clearFlipbookDataOnPool;
+		[SerializeField] protected bool _clearDelayOnPool;
 		
 		private int _hash;
+		protected FlipbookData _flipbookBaseData;
+		protected int _frame;
+		private ManagedCoroutine _flipbookCor;
 #endregion Fields
-
+		
 #region Public Methods
-		public void Pool() {
+		public virtual void Pool() {
 			if (Playing) {
 				Play(false);
 			}
 
-			_flipbookData = null;
-			_delay = 0.0f;
-			_spriteRenderer.color = Color.white;
-
-			OnFinishedPlaying = null;
-		
-			// Disable our GameObject.
-			gameObject.SetActive(false);
+			if (_clearDelayOnPool) {
+				_delay = 0.0f;
+			}
 			
-			// Reset transform.
-			transform.rotation = Quaternion.identity;
-			transform.localScale = Vector3.one;
+			OnFinishedPlaying = null;
+			gameObject.SetActive(false);
+			var transform1 = transform;
+			transform1.rotation = Quaternion.identity;
+			transform1.localScale = Vector3.one;
 		}
 	
 		public void Unpool() {
-			// Listen for when flipbook finishes playing.
-			OnFinishedPlaying += PoolableOnFinishedPlaying;
-			
-			// Enable our GameObject.
 			gameObject.SetActive(true);
 		}
 
@@ -125,109 +92,75 @@ namespace Gruel.Flipbook {
 				GameObject.Destroy(gameObject);
 			}
 		}
-		
-		public void Play(FlipbookData flipbookData) {
-			_flipbookData = flipbookData;
-			Play(true);
-		}
-	
-		public void Play(bool play) {
-			if (_flipbookCor != null) {
-				// Stop routine.
-				_flipbookCor?.Stop();
-			
-				Playing = false;
 
-				// Remove last frame.
-				if (_spriteRenderer != null) {
-					_spriteRenderer.sprite = null;
-				}
+		public virtual void Play(bool play) {
+			Playing = false;
+			_flipbookCor?.Stop();
 
-				if (_image != null) {
-					_image.sprite = null;
-				}
-			}
-		
 			if (play) {
-				// Cache data.
-				_frameDelay = 1.0f / _flipbookData.FramesPerSecond;
-				_numberOfFrames = _flipbookData.Length;
-				_duration = _frameDelay * _numberOfFrames;
-				_loop = _flipbookData.Loop;
-			
-				if (_spriteRenderer != null) {
-					_spriteRenderer.material = _flipbookData.Material;
-				}
-
-				if (_image != null) {
-					_image.material = _flipbookData.Material;
-				}
-
 				Playing = true;
 				_flipbookCor = CoroutineRunner.StartManagedCoroutine(FlipbookCor());
+			} else {
+				ClearFrame();
 			}
 		}
 #endregion Public Methods
-
-#region Private Methods
-		private void Start() {
-			// If _playOnStart is enabled start playing.
+		
+#region Protected Methods
+		protected virtual void Start() {
 			if (_playOnStart) {
 				Play(true);
 			}
 		}
 
-		private void OnDestroy() {
-			// Stop playing.
+		protected virtual void OnDestroy() {
 			Play(false);
 		}
-		
-		private void PoolableOnFinishedPlaying() {
+
+		protected virtual void FinishedPlaying() {
+			
+			OnFinishedPlaying?.Invoke();
+			
 			if (_poolWhenFinished) {
 				ObjectPool.ObjectPool.Repool(this);
 			}
 		}
+
+		protected abstract void FrameChanged();
+		protected abstract void ClearFrame();
+#endregion Protected Methods
 		
+#region Private Methods
 		private IEnumerator FlipbookCor() {
 			if (_delay > 0.0f) {
 				yield return new WaitForSeconds(_delay);
 			}
-		
-			var playTime = _startAtRandomPlaybackPosition ? Time.time + -UnityEngine.Random.Range(0.0f, _duration) : Time.time;
+
+			var loop = _flipbookBaseData.Loop;
+			var duration = _flipbookBaseData.Duration;
+			var numberOfFrames = _flipbookBaseData.Length;
+			var playTime = _startAtRandomPlaybackPosition
+				? Time.time + -UnityEngine.Random.Range(0.0f, duration)
+				: Time.time;
+
 			while (Playing) {
 				var timeSinceStart = Time.time - playTime;
-				var playbackTime = timeSinceStart % _duration;
-				var playbackTimeNormal = Mathf.InverseLerp(0.0f, _duration, playbackTime);
-				
-				// Check if we should continue playing.
-				if (_loop == false
-					&& timeSinceStart >= _duration) {
+				var playbackTime = timeSinceStart % duration;
+				var playbackTimeNormal = Mathf.InverseLerp(0.0f, duration, playbackTime);
+
+				if (loop == false
+				&& timeSinceStart >= duration) {
 					Playing = false;
 
 					if (_clearLastFrame) {
-						if (_spriteRenderer != null) {
-							_spriteRenderer.sprite = null;
-						}
-
-						if (_image != null) {
-							_image.sprite = null;
-						}
+						ClearFrame();
 					}
-				
-					OnFinishedPlaying?.Invoke();
+					
+					FinishedPlaying();
 					break;
 				}
-				
-				var frame = (int)Mathf.Lerp(0.0f, _numberOfFrames, playbackTimeNormal);
-			
-				if (_spriteRenderer != null) {
-					_spriteRenderer.sprite = _flipbookData[frame];
-				}
 
-				if (_image != null) {
-					_image.sprite = _flipbookData[frame];
-				}
-				
+				Frame = (int) Mathf.Lerp(0.0f, numberOfFrames, playbackTimeNormal);
 				yield return null;
 			}
 		}
