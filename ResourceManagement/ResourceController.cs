@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Gruel.CoroutineSystem;
 using UnityEngine;
 
-namespace Gruel {
+namespace Gruel.ResourceManagement {
 	public static class ResourceController  {
 	
 #region Fields

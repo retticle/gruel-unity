@@ -3,7 +3,7 @@ using System.Collections;
 using Gruel.CoroutineSystem;
 using UnityEngine;
 
-namespace Gruel {
+namespace Gruel.ResourceManagement {
 	public static class AsyncLoader {
 	
 #region Public Methods
