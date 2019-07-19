@@ -11,7 +11,6 @@ namespace Gruel.ObjectPool {
 #endregion Properties
 
 #region Fields
-		[Header("Pool Core")]
 		[SerializeField] private Transform _poolContainer;
 
 		private static Dictionary<int, List<IPoolable>> _poolComplete;
@@ -90,7 +89,7 @@ namespace Gruel.ObjectPool {
 
 		public static void Repool(IPoolable poolable) {
 			// Get poolable hash.
-			var hash = poolable.GetHash();
+			var hash = poolable.Hash;
 		
 			// Tell poolable to pool itself.
 			poolable.Pool();
@@ -134,7 +133,7 @@ namespace Gruel.ObjectPool {
 				var poolable = instantiatedObject.GetComponent<IPoolable>();
 			
 				// Save hash in the poolable.
-				poolable.SetHash(hash);
+				poolable.Hash = hash;
 			
 				// Tell the poolable its being pooled.
 				poolable.Pool();
@@ -153,7 +152,7 @@ namespace Gruel.ObjectPool {
 			var poolable = instantiatedObject.GetComponent<IPoolable>();
 		
 			// Save hash in the poolable.
-			poolable.SetHash(hash);
+			poolable.Hash = hash;
 		
 			// Tell the poolable its being pooled.
 			poolable.Pool();

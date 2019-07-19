@@ -4,8 +4,7 @@ namespace Gruel.ObjectPool {
 		void Pool();
 		void Unpool();
 	
-		int GetHash();
-		void SetHash(int hash);
+		int Hash { get; set; }
 
 		void Destroy();
 	

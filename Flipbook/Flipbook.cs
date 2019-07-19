@@ -38,6 +38,8 @@ namespace Gruel.Flipbook {
 				FrameChanged();
 			}
 		}
+		
+		public int Hash { get; set; }
 #endregion Properties
 		
 #region Fields
@@ -52,7 +54,6 @@ namespace Gruel.Flipbook {
 		[SerializeField] protected bool _clearFlipbookDataOnPool;
 		[SerializeField] protected bool _clearDelayOnPool;
 		
-		private int _hash;
 		protected FlipbookData _flipbookBaseData;
 		protected int _frame;
 		private ManagedCoroutine _flipbookCor;
@@ -77,14 +78,6 @@ namespace Gruel.Flipbook {
 	
 		public void Unpool() {
 			gameObject.SetActive(true);
-		}
-
-		public int GetHash() {
-			return _hash;
-		}
-	
-		public void SetHash(int hash) {
-			_hash = hash;
 		}
 
 		public void Destroy() {
