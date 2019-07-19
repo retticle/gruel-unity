@@ -41,8 +41,8 @@ namespace Gruel.StateMachine {
 			Debug.LogFormat(
 				"{0}.StateMachine.SetState: switching from {1} to {2}",
 				_name,
-				_stateCurrent == UninitializedStateId ? UninitializedStateName : _states[_stateCurrent].StateName(),
-				stateNext == UninitializedStateId ? UninitializedStateName : _states[stateNext].StateName()
+				_stateCurrent == UninitializedStateId ? UninitializedStateName : _states[_stateCurrent].StateName,
+				stateNext == UninitializedStateId ? UninitializedStateName : _states[stateNext].StateName
 			);
 
 			// Exit the current state.

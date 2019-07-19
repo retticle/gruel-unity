@@ -1,12 +1,15 @@
 namespace Gruel.ObjectPool {
 	public interface IPoolable {
 
+#region Properties
+		int Hash { get; set; }
+#endregion Properties
+
+#region Methods
 		void Pool();
 		void Unpool();
-	
-		int Hash { get; set; }
-
 		void Destroy();
+#endregion Methods
 	
 	}
 }
