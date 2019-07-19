@@ -53,7 +53,7 @@ namespace Gruel.FlowMachine {
 			// Wait for a flow to run before moving on to the next.
 			for (int i = 0, n = _flows.Count; i < n; i++) {
 				if (_flows[i].ShouldRun()) {
-					Debug.Log($"{_flowMachineName}.FlowMachine.FlowCor: Starting flow step: {_flows[i].FlowName()}");
+					Debug.Log($"{_flowMachineName}.FlowMachine.FlowCor: Starting flow step: {_flows[i].FlowName}");
 
 					yield return _flows[i].RunFlow();
 				}
