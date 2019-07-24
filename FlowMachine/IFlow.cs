@@ -5,10 +5,10 @@ namespace Gruel.FlowMachine {
 		
 #region Properties
 		string FlowName { get; }
+		bool ShouldRun { get; }
 #endregion Properties
 		
 #region Methods
-		bool ShouldRun();
 		Coroutine RunFlow();
 #endregion Methods
 

@@ -28,14 +28,14 @@ namespace Gruel.FlowMachine {
 			_flows.Add(flow);
 		}
 
-		public void StartFlow(Action onFlowCompleteCallback = null) {
+		public void StartFlow(Action onFlowComplete = null) {
 			if (_flowCor != null
-				&& _flowCor.IsRunning) {
+			&& _flowCor.IsRunning) {
 				Debug.LogError($"{_flowMachineName}.FlowMachine.StartFlow: Flow is already running!");
 				return;
 			}
 
-			_flowCor = CoroutineRunner.StartManagedCoroutine(FlowCor(onFlowCompleteCallback));
+			_flowCor = CoroutineRunner.StartManagedCoroutine(FlowCor(onFlowComplete));
 		}
 
 		public void StopFlow() {
@@ -52,7 +52,7 @@ namespace Gruel.FlowMachine {
 			// Check if it should be run or not.
 			// Wait for a flow to run before moving on to the next.
 			for (int i = 0, n = _flows.Count; i < n; i++) {
-				if (_flows[i].ShouldRun()) {
+				if (_flows[i].ShouldRun) {
 					Debug.Log($"{_flowMachineName}.FlowMachine.FlowCor: Starting flow step: {_flows[i].FlowName}");
 
 					yield return _flows[i].RunFlow();

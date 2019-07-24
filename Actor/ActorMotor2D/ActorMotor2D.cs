@@ -25,7 +25,7 @@ namespace Gruel.Actor.ActorMotor2D {
 		[Header("Traits")]
 		[SerializeField] private Component[] _traitComponents = new Component[0];
 
-		private List<IActorMotor2DTrait> _traits = null;
+		private List<IActorMotor2DTrait> _traits;
 
 		private void TraitsInit() {
 			_traits = new List<IActorMotor2DTrait>();

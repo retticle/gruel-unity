@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Gruel.Flipbook {
-	[CreateAssetMenu(menuName = "Gruel/FlipbookData")]
+	[CreateAssetMenu(menuName = "Gruel/SpriteFlipbookData")]
 	public class SpriteFlipbookData : FlipbookData {
 
 #region Properties

@@ -6,12 +6,18 @@ namespace Gruel.Camera {
 #region Properties
 		public float Ppu {
 			get => _ppu;
-			set => _ppu = value;
+			set {
+				_ppu = value;
+				SetOrtho();
+			}
 		}
 
 		public float PpuScale {
 			get => _ppuScale;
-			set => _ppuScale = value;
+			set {
+				_ppuScale = value;
+				SetOrtho();
+			}
 		}
 #endregion Properties
 
