@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	public class ObeliskStackTrace : MonoBehaviour {
 		
 #region Properties

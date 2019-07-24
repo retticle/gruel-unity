@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	[CreateAssetMenu(menuName = "Gruel/Console/Obelisk ColorSet Asset", fileName = "ObeliskColorSet_")]
 	public class ObeliskColorSet : ScriptableObject {
 		

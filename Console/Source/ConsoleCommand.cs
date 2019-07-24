@@ -1,4 +1,4 @@
-﻿namespace Gruel.Console {
+﻿namespace Gruel {
 	
 	/// <summary>
 	/// Contains information about each command.

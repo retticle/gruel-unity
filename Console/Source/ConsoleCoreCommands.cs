@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gruel.Console {
+namespace Gruel {
 	public static class ConsoleCoreCommands {
 		
 #region Public Methods

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Gruel.Console {
+namespace Gruel {
 	[CreateAssetMenu(menuName = "Gruel/Console/Console History Asset", fileName = "ConsoleHistory")]
 	public class ConsoleHistory : ScriptableObject {
 		

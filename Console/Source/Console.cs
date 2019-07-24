@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Gruel.Console {
+namespace Gruel {
 	public class Console : MonoBehaviour {
 		
 #region Properties

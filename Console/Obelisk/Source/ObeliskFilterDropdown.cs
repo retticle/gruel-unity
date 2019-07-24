@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	public class ObeliskFilterDropdown : MonoBehaviour {
 		
 #region Properties

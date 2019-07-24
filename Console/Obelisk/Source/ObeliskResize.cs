@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	public class ObeliskResize : MonoBehaviour {
 
 #region Fields

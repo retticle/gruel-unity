@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gruel.Console {
+namespace Gruel {
 	[CreateAssetMenu(menuName = "Gruel/Console/Console Config Asset", fileName = "ConsoleConfig")]
 	public class ConsoleConfig : ScriptableObject {
 		

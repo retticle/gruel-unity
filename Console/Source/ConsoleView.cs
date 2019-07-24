@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gruel.Console {
+namespace Gruel {
 	public abstract class ConsoleView : MonoBehaviour {
 
 #region Properties

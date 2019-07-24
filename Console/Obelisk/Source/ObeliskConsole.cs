@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	public class ObeliskConsole : ConsoleView {
 
 #region Properties

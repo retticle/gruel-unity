@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Gruel.Console.Obelisk {
+namespace Gruel.Obelisk {
 	public class ListenForDimensionsChange : MonoBehaviour {
 		
 #region Fields
