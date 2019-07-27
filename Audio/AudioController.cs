@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Gruel.CoroutineSystem;
+using Gruel.CoroutineUtils;
 using UnityEngine;
 using UnityEngine.Audio;
 

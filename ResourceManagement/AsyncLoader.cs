@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Gruel.CoroutineSystem;
+using Gruel.CoroutineUtils;
 using UnityEngine;
 
 namespace Gruel.ResourceManagement {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Gruel.CoroutineSystem;
+using Gruel.CoroutineUtils;
 using Gruel.ResourceManagement;
 using UnityEngine;
 
