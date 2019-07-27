@@ -1,6 +1,1 @@
-CURRENT VERSION: 0.1.0
-
------ ----- ----- -----
-gruel-unity 0.1.0 | ACTIVE DEVELOPMENT
------ ----- ----- -----
- * Initial release of these files in a public repository.
+0.1.0
